@@ -602,7 +602,7 @@
         var top = document.createElement('div')
         top.style.cssText = 'display:flex;justify-content:space-between;align-items:center;'
         top.innerHTML =
-          '<span style="font-size:13px;font-weight:600;color:#374151;">' + b.label[lang] + ' — ' + b.name[lang] + '</span>' +
+          '<span style="font-size:13px;font-weight:600;color:#374151;">' + b.name[lang] + '</span>' +
           '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:' + bgc + ';color:' + col + ';">' + lvl + '</span>'
 
         var barWrap = document.createElement('div')
@@ -611,13 +611,8 @@
         bar.style.cssText = 'height:4px;border-radius:2px;background:' + col + ';width:' + pct + '%;'
         barWrap.appendChild(bar)
 
-        var action = document.createElement('p')
-        action.style.cssText = 'font-size:12px;color:#6B7280;margin:0;'
-        action.textContent = b.action[lang]
-
         row.appendChild(top)
         row.appendChild(barWrap)
-        row.appendChild(action)
         container.appendChild(row)
       })
 
