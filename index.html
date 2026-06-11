@@ -92,6 +92,16 @@
     #cta-analyze:hover svg {
       transform: translateX(4px);
     }
+
+    @media (max-width: 639px) {
+      #nav-specialist-btn { display: none; }
+      #hero-h1 { font-size: 30px !important; letter-spacing: -0.2px !important; }
+      #quiz-title { font-size: 22px !important; }
+      #quiz-question { font-size: 15px !important; margin-bottom: 32px !important; }
+      #avatar-wrap { width: 90px !important; height: 90px !important; margin-bottom: 20px !important; }
+      #photo-clip { clip-path: circle(34px at 50% 50%) !important; }
+      .av-photo { width: 90px !important; height: 90px !important; }
+    }
   </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -101,7 +111,7 @@
   </video>
 
   <!-- ── Navbar compartilhada ── -->
-  <header class="w-full px-8 py-5 shrink-0" style="background-color:#ffffff;">
+  <header class="w-full px-4 sm:px-8 py-5 shrink-0" style="background-color:#ffffff;">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <img src="links/header-logo.svg" alt="CLA Brasil" style="height:44px;" />
       <div class="flex items-center gap-4">
@@ -189,14 +199,14 @@
         créditos, bloqueios no split payment e riscos fiscais invisíveis.
       </p>
 
-      <div class="flex items-center gap-4">
+      <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto" style="max-width:420px;">
         <button id="cta-specialist" style="border-color:#848484;color:#8E8E8E;"
-          class="px-7 py-3.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors">
+          class="w-full sm:w-auto px-7 py-3.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors">
           Fale com um especialista
         </button>
         <button id="cta-analyze" onclick="startQuiz()"
           style="color:#fff;"
-          class="flex items-center gap-3 px-8 py-4 rounded-full text-[15px] font-semibold">
+          class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-full text-[15px] font-semibold">
           Analisar minha cadeia agora
           <svg width="15" height="15" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -642,20 +652,21 @@
         var next = (current + 1) % photos.length
         var outP = photos[current]
         var inP  = photos[next]
+        var sz   = document.getElementById('avatar-wrap').offsetWidth
         inP.style.transition = 'none'
-        inP.style.transform  = 'translateX(120px)'
+        inP.style.transform  = 'translateX(' + sz + 'px)'
         await sleep(16)
         setFrame(true)
         await sleep(300)
         outP.style.transition = 'transform 0.44s cubic-bezier(0.4,0,0.2,1)'
-        outP.style.transform  = 'translateX(-120px)'
+        outP.style.transform  = 'translateX(-' + sz + 'px)'
         inP.style.transition  = 'transform 0.44s cubic-bezier(0.4,0,0.2,1)'
         inP.style.transform   = 'translateX(0)'
         await sleep(460)
         setFrame(false)
         await sleep(400)
         outP.style.transition = 'none'
-        outP.style.transform  = 'translateX(120px)'
+        outP.style.transform  = 'translateX(' + sz + 'px)'
         current = next
         busy    = false
       }
