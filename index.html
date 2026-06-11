@@ -94,13 +94,21 @@
     }
 
     @media (max-width: 639px) {
+      /* Layout fix: permite o main rolar internamente, mantendo footer visível */
+      #view-home > main { overflow-y: auto; min-height: 0; padding-top: 12px !important; padding-bottom: 12px !important; }
+
       #nav-specialist-btn { display: none; }
-      #hero-h1 { font-size: 30px !important; letter-spacing: -0.2px !important; }
-      #quiz-title { font-size: 22px !important; }
-      #quiz-question { font-size: 15px !important; margin-bottom: 32px !important; }
-      #avatar-wrap { width: 90px !important; height: 90px !important; margin-bottom: 20px !important; }
-      #photo-clip { clip-path: circle(34px at 50% 50%) !important; }
-      .av-photo { width: 90px !important; height: 90px !important; }
+
+      #avatar-wrap { width: 72px !important; height: 72px !important; margin-bottom: 14px !important; }
+      #photo-clip  { clip-path: circle(27px at 50% 50%) !important; }
+      .av-photo    { width: 72px !important; height: 72px !important; }
+      #frame-svg   { width: 72px !important; height: 72px !important; }
+
+      #hero-h1   { font-size: 24px !important; letter-spacing: -0.2px !important; line-height: 1.2 !important; margin-bottom: 12px !important; }
+      #hero-desc { font-size: 13px !important; margin-bottom: 24px !important; max-width: 100% !important; }
+
+      #quiz-title    { font-size: 20px !important; margin-bottom: 16px !important; }
+      #quiz-question { font-size: 14px !important; margin-bottom: 28px !important; }
     }
   </style>
 </head>
