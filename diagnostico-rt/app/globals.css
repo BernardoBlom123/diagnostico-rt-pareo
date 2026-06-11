@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Museo Sans — usa instalação local em dev; adicione arquivos woff2 em /public/fonts/ para produção */
+@font-face {
+  font-family: 'Museo Sans';
+  src: local('Museo Sans 300'), local('MuseoSans-300'), local('Museo Sans');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Museo Sans';
+  src: local('Museo Sans 500'), local('MuseoSans-500'), local('Museo Sans');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Museo Sans';
+  src: local('Museo Sans 700'), local('MuseoSans-700'), local('Museo Sans');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  --bg-page: #EBEBEB;
+  --brand: #3D425D;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-page);
+  font-family: 'Museo Sans', sans-serif;
+}

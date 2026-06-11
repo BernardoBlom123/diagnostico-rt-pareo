@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnóstico RT — Páreo by CLA Brasil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Museo Sans', 'sans-serif'] } } }
+    }
+  </script>
+  <style>
+    @font-face {
+      font-family: 'Museo Sans';
+      src: local('Museo Sans 300'), local('MuseoSans-300'), local('Museo Sans');
+      font-weight: 300;
+    }
+    @font-face {
+      font-family: 'Museo Sans';
+      src: local('Museo Sans 500'), local('MuseoSans-500'), local('Museo Sans');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Museo Sans';
+      src: local('Museo Sans 700'), local('MuseoSans-700'), local('Museo Sans');
+      font-weight: 700;
+    }
+    * { -webkit-font-smoothing: antialiased; }
+    html, body { height: 100%; overflow: hidden; }
+    body { background-color: #ffffff; font-family: 'Museo Sans', sans-serif; }
+
+    #bg-video {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+      will-change: opacity;
+      transform: translateZ(0);
+    }
+
+    .view { display: none; flex: 1; flex-direction: column; min-height: 0; }
+    .view.active { display: flex; }
+    .view { opacity: 0; transition: opacity 0.22s ease; }
+    .view.active { opacity: 1; }
+
+    .ans-btn {
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: 1px solid #C4C4C4;
+      color: #3D425D;
+      font-size: 14px;
+      font-weight: 500;
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .ans-btn:hover    { background: rgba(0,0,0,0.05); border-color: #3D425D; }
+    .ans-btn.selected { background: rgba(0,217,189,0.12); border-color: #00D9BD; color: #1a6b63; font-weight: 600; }
+
+    .lang-option {
+      display: block; width: 100%; padding: 10px 18px;
+      border: none; background: transparent;
+      font-size: 13px; font-weight: 500; color: #3D425D;
+      cursor: pointer; font-family: inherit; text-align: left;
+      transition: background 0.15s; white-space: nowrap;
+    }
+    .lang-option:hover  { background: #F3F4F6; }
+    .lang-option.active { color: #00D9BD; font-weight: 700; }
+
+    #cta-analyze {
+      background: linear-gradient(135deg, #4a5070 0%, #3D425D 100%);
+      box-shadow: 0 4px 20px rgba(61, 66, 93, 0.32);
+      transition: box-shadow 0.22s ease, transform 0.18s ease, background 0.22s ease;
+    }
+    #cta-analyze:hover {
+      background: linear-gradient(135deg, #535878 0%, #454b6b 100%);
+      box-shadow: 0 8px 32px rgba(61, 66, 93, 0.48);
+      transform: translateY(-2px);
+    }
+    #cta-analyze:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 12px rgba(61, 66, 93, 0.3);
+    }
+    #cta-analyze svg {
+      transition: transform 0.22s ease;
+    }
+    #cta-analyze:hover svg {
+      transform: translateX(4px);
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col">
+
+  <video id="bg-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
+    <source src="links/bg-fill.mov" type="video/mp4">
+  </video>
+
+  <!-- ── Navbar compartilhada ── -->
+  <header class="w-full px-8 py-5 shrink-0" style="background-color:#ffffff;">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <img src="links/header-logo.svg" alt="CLA Brasil" style="height:44px;" />
+      <div class="flex items-center gap-4">
+        <div id="lang-wrapper" style="position:relative;">
+          <button id="lang-btn" onclick="toggleLangDrawer()"
+            onmouseover="this.style.background='#D4D4D4'" onmouseout="this.style.background='#EBEBEB'"
+            style="height:40px;padding:0 14px;border-radius:999px;background:#EBEBEB;border:none;font-size:13px;font-weight:600;color:#3D425D;cursor:pointer;font-family:inherit;letter-spacing:0.05em;display:flex;align-items:center;gap:7px;">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+              <circle cx="7.5" cy="7.5" r="6.5" stroke="#3D425D" stroke-width="1.25"/>
+              <ellipse cx="7.5" cy="7.5" rx="2.7" ry="6.5" stroke="#3D425D" stroke-width="1.25"/>
+              <line x1="1.2" y1="5.5" x2="13.8" y2="5.5" stroke="#3D425D" stroke-width="1.25"/>
+              <line x1="1.2" y1="9.5" x2="13.8" y2="9.5" stroke="#3D425D" stroke-width="1.25"/>
+            </svg>
+            <span id="lang-label">PT</span>
+            <svg id="lang-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true" style="transition:transform 0.22s;">
+              <path d="M1 1L5 5L9 1" stroke="#3D425D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div id="lang-drawer" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.13);overflow:hidden;min-width:110px;z-index:100;">
+            <button class="lang-option active" onclick="selectLang('pt')" data-lang="pt">Português</button>
+            <button class="lang-option"        onclick="selectLang('en')" data-lang="en">English</button>
+            <button class="lang-option"        onclick="selectLang('es')" data-lang="es">Español</button>
+          </div>
+        </div>
+        <button id="nav-specialist-btn" style="border-color:#848484;color:#8E8E8E;"
+          class="flex items-center gap-2 px-5 py-2.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors whitespace-nowrap">
+          <span>Fale com um especialista</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ══════════════════════════════════════
+       VIEW 1 — Home
+  ══════════════════════════════════════ -->
+  <div id="view-home" class="view active">
+    <main class="flex-1 flex flex-col items-center justify-center text-center px-4 py-6">
+
+      <!-- Avatar -->
+      <div id="avatar-wrap" style="position:relative;width:120px;height:120px;margin-bottom:32px;">
+        <div id="photo-clip" style="position:absolute;inset:0;clip-path:circle(45px at 50% 50%);">
+          <img class="av-photo" src="links/hero-icon.svg"   alt="Especialista Páreo"
+               style="position:absolute;top:0;left:0;width:120px;height:120px;" />
+          <img class="av-photo" src="links/hero-icon-2.svg" alt="" aria-hidden="true"
+               style="position:absolute;top:0;left:0;width:120px;height:120px;transform:translateX(120px);" />
+          <img class="av-photo" src="links/hero-icon-3.svg" alt="" aria-hidden="true"
+               style="position:absolute;top:0;left:0;width:120px;height:120px;transform:translateX(120px);" />
+          <img class="av-photo" src="links/hero-icon-4.svg" alt="" aria-hidden="true"
+               style="position:absolute;top:0;left:0;width:120px;height:120px;transform:translateX(120px);" />
+        </div>
+        <svg id="frame-svg" viewBox="0 0 175 175" width="120" height="120" fill="none"
+             xmlns="http://www.w3.org/2000/svg"
+             style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;">
+          <defs>
+            <linearGradient id="g-tl" x1="22.25"  y1="0.5"  x2="22.25"  y2="44"    gradientUnits="userSpaceOnUse"><stop stop-color="#00D9BD"/><stop offset="1" stop-color="#666"/></linearGradient>
+            <linearGradient id="g-bl" x1="22.25"  y1="131"  x2="22.25"  y2="174.5" gradientUnits="userSpaceOnUse"><stop stop-color="#00D9BD"/><stop offset="1" stop-color="#666"/></linearGradient>
+            <linearGradient id="g-tr" x1="152.75" y1="0.5"  x2="152.75" y2="44"    gradientUnits="userSpaceOnUse"><stop stop-color="#00D9BD"/><stop offset="1" stop-color="#666"/></linearGradient>
+            <linearGradient id="g-br" x1="152.75" y1="131"  x2="152.75" y2="174.5" gradientUnits="userSpaceOnUse"><stop stop-color="#00D9BD"/><stop offset="1" stop-color="#666"/></linearGradient>
+          </defs>
+          <g id="c-tl" style="transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);">
+            <path d="M0.5 44V22.25C0.5 16.4815 2.79151 10.9493 6.87043 6.87043C10.9493 2.79151 16.4815 0.5 22.25 0.5H44" stroke="url(#g-tl)" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <g id="c-bl" style="transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);">
+            <path d="M0.5 131V152.75C0.5 158.518 2.79151 164.051 6.87043 168.13C10.9493 172.208 16.4815 174.5 22.25 174.5H44" stroke="url(#g-bl)" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <g id="c-tr" style="transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);">
+            <path d="M131 0.5H152.75C158.518 0.5 164.051 2.79151 168.13 6.87043C172.208 10.9493 174.5 16.4815 174.5 22.25V44" stroke="url(#g-tr)" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <g id="c-br" style="transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);">
+            <path d="M131 174.5H152.75C158.518 174.5 164.051 172.208 168.13 168.13C172.208 164.051 174.5 158.518 174.5 152.75V131" stroke="url(#g-br)" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+      </div>
+
+      <h1 id="hero-h1" style="font-size:52px;line-height:1.12;letter-spacing:-0.5px;margin-bottom:20px;font-weight:400;color:#3D425D;">
+        A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?
+      </h1>
+
+      <p id="hero-desc" style="color:#9CA3AF;font-size:15px;max-width:480px;margin-bottom:48px;line-height:1.6;">
+        Descubra em minutos se os fornecedores expõem sua empresa a perda de
+        créditos, bloqueios no split payment e riscos fiscais invisíveis.
+      </p>
+
+      <div class="flex items-center gap-4">
+        <button id="cta-specialist" style="border-color:#848484;color:#8E8E8E;"
+          class="px-7 py-3.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors">
+          Fale com um especialista
+        </button>
+        <button id="cta-analyze" onclick="startQuiz()"
+          style="color:#fff;"
+          class="flex items-center gap-3 px-8 py-4 rounded-full text-[15px] font-semibold">
+          Analisar minha cadeia agora
+          <svg width="15" height="15" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+    </main>
+    <footer class="w-full text-center pt-6 pb-[39px] shrink-0">
+      <p class="footer-copy" style="color:#9CA3AF;font-size:12px;">© 2026 CLA Brasil — todos os direitos reservados</p>
+    </footer>
+  </div><!-- /view-home -->
+
+
+  <!-- ══════════════════════════════════════
+       VIEW 2 — Questionário
+  ══════════════════════════════════════ -->
+  <div id="view-quiz" class="view">
+    <main class="flex-1 flex flex-col items-center justify-center text-center px-4 py-6">
+
+      <!-- Voltar -->
+      <button onclick="history.back()"
+        style="color:#8E8E8E;width:100%;max-width:560px;"
+        class="flex items-center gap-1.5 text-sm font-medium hover:text-[#3D425D] transition-colors mb-6">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="quiz-back-text">Voltar</span>
+      </button>
+
+      <!-- Progresso -->
+      <div style="width:100%;max-width:560px;margin-bottom:36px;">
+        <div style="display:flex;justify-content:flex-end;align-items:center;margin-bottom:8px;">
+          <span id="quiz-counter" style="font-size:12px;color:#9CA3AF;"></span>
+        </div>
+        <div style="height:3px;background:#D1D5DB;border-radius:2px;">
+          <div id="quiz-bar" style="height:3px;background:#00D9BD;border-radius:2px;transition:width 0.35s ease;width:0%;"></div>
+        </div>
+      </div>
+
+      <!-- Título + Pergunta -->
+      <h2 id="quiz-title"
+          style="font-size:38px;font-weight:400;color:#1F2937;letter-spacing:-0.3px;margin-bottom:28px;line-height:1.2;">
+        Vamos começar!
+      </h2>
+
+      <p id="quiz-question"
+         style="font-size:17px;color:#374151;max-width:580px;line-height:1.75;margin-bottom:44px;">
+      </p>
+
+      <!-- Botões 2 × 2 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:420px;width:100%;">
+        <button id="ans-sim"       class="ans-btn" onclick="answer(0)">Sim</button>
+        <button id="ans-andamento" class="ans-btn" onclick="answer(1)">Em andamento</button>
+        <button id="ans-nao"       class="ans-btn" onclick="answer(2)">Não</button>
+        <button id="ans-nao-sei"   class="ans-btn" onclick="answer(3)">Não sei</button>
+      </div>
+
+    </main>
+    <footer class="w-full text-center pt-6 pb-[39px] shrink-0">
+      <p class="footer-copy" style="color:#9CA3AF;font-size:12px;">© 2026 CLA Brasil — todos os direitos reservados</p>
+    </footer>
+  </div><!-- /view-quiz -->
+
+
+  <!-- ══════════════════════════════════════
+       VIEW 3 — Resultado
+  ══════════════════════════════════════ -->
+  <div id="view-result" class="view">
+    <main class="flex-1 flex flex-col items-center px-4 py-8" style="overflow-y:auto;">
+      <div style="width:100%;max-width:600px;">
+
+        <!-- Score geral -->
+        <div style="text-align:center;margin-bottom:40px;">
+          <p id="res-score-label" style="font-size:13px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Score geral</p>
+          <div id="res-score-pct"
+               style="font-size:64px;font-weight:700;line-height:1;letter-spacing:-2px;margin-bottom:12px;color:#1F2937;"></div>
+          <span id="res-level-badge"
+                style="display:inline-block;padding:4px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;"></span>
+        </div>
+
+        <!-- Breakdown por bloco -->
+        <div id="res-blocks" style="display:flex;flex-direction:column;gap:10px;margin-bottom:40px;"></div>
+
+        <!-- CTAs -->
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+          <button id="res-redo-btn" onclick="startQuiz()"
+            style="border-color:#848484;color:#8E8E8E;"
+            class="px-7 py-3.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors">
+            Refazer diagnóstico
+          </button>
+          <button id="res-specialist-btn"
+            style="background-color:#3D425D;color:#fff;"
+            class="px-7 py-3.5 rounded-full text-sm font-medium transition-colors"
+            onmouseover="this.style.backgroundColor='#31364E'"
+            onmouseout="this.style.backgroundColor='#3D425D'">
+            Fale com um especialista
+          </button>
+        </div>
+
+      </div>
+    </main>
+    <footer class="w-full text-center pt-6 pb-[39px] shrink-0">
+      <p class="footer-copy" style="color:#9CA3AF;font-size:12px;">© 2026 CLA Brasil — todos os direitos reservados</p>
+    </footer>
+  </div><!-- /view-result -->
+
+
+  <script>
+    /* ══════════════════════════════════════
+       Idioma
+    ══════════════════════════════════════ */
+    var lang = 'pt'
+
+    var T = {
+      pt: {
+        nav_specialist: 'Fale com um especialista',
+        h1: 'A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?',
+        hero_desc: 'Descubra em minutos se os fornecedores expõem sua empresa a perda de créditos, bloqueios no split payment e riscos fiscais invisíveis.',
+        cta_specialist: 'Fale com um especialista',
+        cta_analyze: 'Analisar minha cadeia agora',
+        footer: '© 2026 CLA Brasil — todos os direitos reservados',
+        back: 'Voltar',
+        score_label: 'Score geral',
+        redo: 'Refazer diagnóstico',
+        res_specialist: 'Fale com um especialista',
+        ans: ['Sim', 'Em andamento', 'Não', 'Não sei'],
+        risk: ['BAIXO RISCO', 'RISCO MÉDIO', 'ALTO RISCO'],
+        quiz_start: 'Vamos começar!',
+        counter_sep: ' de ',
+      },
+      en: {
+        nav_specialist: 'Talk to a specialist',
+        h1: 'The Tax Reform has arrived<br>Is your supply chain ready?',
+        hero_desc: 'Discover in minutes whether your suppliers expose your company to credit losses, split payment blocks, and invisible tax risks.',
+        cta_specialist: 'Talk to a specialist',
+        cta_analyze: 'Analyze my chain now',
+        footer: '© 2026 CLA Brasil — all rights reserved',
+        back: 'Back',
+        score_label: 'Overall Score',
+        redo: 'Retake assessment',
+        res_specialist: 'Talk to a specialist',
+        ans: ['Yes', 'In progress', 'No', "Don't know"],
+        risk: ['LOW RISK', 'MEDIUM RISK', 'HIGH RISK'],
+        quiz_start: "Let's begin!",
+        counter_sep: ' of ',
+      },
+      es: {
+        nav_specialist: 'Habla con un especialista',
+        h1: 'La Reforma Tributaria llegó<br>¿Tu cadena de proveedores está lista?',
+        hero_desc: 'Descubre en minutos si tus proveedores exponen a tu empresa a pérdida de créditos, bloqueos en el split payment y riesgos fiscales invisibles.',
+        cta_specialist: 'Habla con un especialista',
+        cta_analyze: 'Analizar mi cadena ahora',
+        footer: '© 2026 CLA Brasil — todos los derechos reservados',
+        back: 'Volver',
+        score_label: 'Puntuación general',
+        redo: 'Repetir diagnóstico',
+        res_specialist: 'Habla con un especialista',
+        ans: ['Sí', 'En progreso', 'No', 'No sé'],
+        risk: ['BAJO RIESGO', 'RIESGO MEDIO', 'ALTO RIESGO'],
+        quiz_start: '¡Comencemos!',
+        counter_sep: ' de ',
+      }
+    }
+
+    function toggleLangDrawer () {
+      var drawer  = document.getElementById('lang-drawer')
+      var chevron = document.getElementById('lang-chevron')
+      var isOpen  = drawer.style.display !== 'none'
+      drawer.style.display    = isOpen ? 'none' : 'block'
+      chevron.style.transform = isOpen ? '' : 'rotate(180deg)'
+    }
+
+    function selectLang (l) {
+      setLang(l)
+      document.getElementById('lang-drawer').style.display    = 'none'
+      document.getElementById('lang-chevron').style.transform = ''
+    }
+
+    document.addEventListener('click', function (e) {
+      var wrapper = document.getElementById('lang-wrapper')
+      if (wrapper && !wrapper.contains(e.target)) {
+        document.getElementById('lang-drawer').style.display    = 'none'
+        document.getElementById('lang-chevron').style.transform = ''
+      }
+    })
+
+    function setLang (l) {
+      lang = l
+      var t = T[l]
+      document.getElementById('lang-label').textContent = l.toUpperCase()
+      document.querySelectorAll('.lang-option').forEach(function (btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === l)
+      })
+      document.getElementById('nav-specialist-btn').querySelector('span').textContent = t.nav_specialist
+      document.getElementById('hero-h1').innerHTML = t.h1
+      document.getElementById('hero-desc').textContent = t.hero_desc
+      document.getElementById('cta-specialist').textContent = t.cta_specialist
+      document.getElementById('cta-analyze').textContent = t.cta_analyze
+      document.querySelectorAll('.footer-copy').forEach(function (el) { el.textContent = t.footer })
+      document.getElementById('quiz-back-text').textContent = t.back
+      document.getElementById('ans-sim').textContent = t.ans[0]
+      document.getElementById('ans-andamento').textContent = t.ans[1]
+      document.getElementById('ans-nao').textContent = t.ans[2]
+      document.getElementById('ans-nao-sei').textContent = t.ans[3]
+      document.getElementById('res-score-label').textContent = t.score_label
+      document.getElementById('res-redo-btn').textContent = t.redo
+      document.getElementById('res-specialist-btn').textContent = t.res_specialist
+      if (document.getElementById('view-quiz').classList.contains('active')) renderQuestion(qIndex)
+      if (document.getElementById('view-result').classList.contains('active')) showResults()
+    }
+
+    /* ══════════════════════════════════════
+       Dados do diagnóstico
+    ══════════════════════════════════════ */
+    var BLOCKS = {
+      A: {
+        label:  { pt: 'Bloco A',   en: 'Block A',   es: 'Bloque A' },
+        name:   { pt: 'Gestão e Homologação de Fornecedores', en: 'Supplier Management & Onboarding',    es: 'Gestión y Homologación de Proveedores' },
+        max: 8,
+        action: { pt: 'Estruturar processo de homologação e monitoramento fiscal de fornecedores', en: 'Structure supplier onboarding and fiscal monitoring process', es: 'Estructurar proceso de homologación y monitoreo fiscal de proveedores' }
+      },
+      B: {
+        label:  { pt: 'Bloco B',   en: 'Block B',   es: 'Bloque B' },
+        name:   { pt: 'Contratos com Fornecedores', en: 'Supplier Contracts',    es: 'Contratos con Proveedores' },
+        max: 8,
+        action: { pt: 'Acelerar iniciativas em andamento', en: 'Accelerate ongoing initiatives', es: 'Acelerar iniciativas en curso' }
+      },
+      C: {
+        label:  { pt: 'Bloco C',   en: 'Block C',   es: 'Bloque C' },
+        name:   { pt: 'Contratos com Clientes', en: 'Client Contracts', es: 'Contratos con Clientes' },
+        max: 8,
+        action: { pt: 'Revisar contratos com clientes quanto a repasse tributário e definição de papel', en: 'Review client contracts on tax pass-through and role definition', es: 'Revisar contratos con clientes respecto al traslado tributario y definición de roles' }
+      },
+      D: {
+        label:  { pt: 'Bloco D',   en: 'Block D',   es: 'Bloque D' },
+        name:   { pt: 'Governança e Integração Interna', en: 'Governance & Internal Integration', es: 'Gobernanza e Integración Interna' },
+        max: 8,
+        action: { pt: 'Implantar governança integrada Jurídico-Fiscal-Suprimentos', en: 'Implement integrated Legal-Tax-Procurement governance', es: 'Implementar gobernanza integrada Legal-Fiscal-Compras' }
+      },
+      E: {
+        label:  { pt: 'Bloco E',   en: 'Block E',   es: 'Bloque E' },
+        name:   { pt: 'Prontidão para a Reforma Tributária', en: 'Tax Reform Readiness', es: 'Preparación para la Reforma Tributaria' },
+        max: 8,
+        action: { pt: 'Elaborar plano de adequação à Reforma Tributária com prazos e responsáveis', en: 'Develop a Tax Reform compliance plan with deadlines and owners', es: 'Elaborar plan de adecuación a la Reforma Tributaria con plazos y responsables' }
+      }
+    }
+
+    var QUESTIONS = [
+      /* Bloco A */
+      { block: 'A', text: { pt: 'A empresa possui processo formal de homologação de fornecedores com verificação de regularidade fiscal (certidões: CND Federal, Estadual, Municipal, FGTS)?', en: 'Does the company have a formal supplier onboarding process with fiscal compliance verification (certificates: Federal, State, Municipal CND, FGTS)?', es: '¿La empresa cuenta con un proceso formal de homologación de proveedores con verificación de regularidad fiscal (certificados: CND Federal, Estadual, Municipal, FGTS)?' }},
+      { block: 'A', text: { pt: 'A validação de regularidade fiscal dos fornecedores é realizada de forma periódica — não apenas no momento da contratação?', en: 'Is the fiscal compliance validation of suppliers performed periodically — not only at the time of contracting?', es: '¿La validación de la regularidad fiscal de los proveedores se realiza de forma periódica, no solo en el momento de la contratación?' }},
+      { block: 'A', text: { pt: 'A empresa monitora se seus fornecedores possuem débitos ou pendências que possam impedir o aproveitamento de créditos de CBS/IBS pela empresa contratante?', en: 'Does the company monitor whether its suppliers have debts or pending issues that could prevent the use of CBS/IBS tax credits by the contracting company?', es: '¿La empresa monitorea si sus proveedores tienen deudas o pendencias que puedan impedir el aprovechamiento de créditos de CBS/IBS por la empresa contratante?' }},
+      { block: 'A', text: { pt: 'Os fornecedores estratégicos são verificados em listas restritivas (CEIS, CNEP, Lista do Trabalho Escravo, IBAMA)?', en: 'Are strategic suppliers checked against restrictive lists (CEIS, CNEP, Slave Labor List, IBAMA)?', es: '¿Los proveedores estratégicos son verificados en listas restrictivas (CEIS, CNEP, Lista de Trabajo Esclavo, IBAMA)?' }},
+      /* Bloco B */
+      { block: 'B', text: { pt: 'Os contratos com fornecedores possuem cláusula de reequilíbrio econômico-financeiro em caso de alteração da carga tributária?', en: 'Do supplier contracts include an economic-financial rebalancing clause in case of changes in the tax burden?', es: '¿Los contratos con proveedores incluyen una cláusula de reequilibrio económico-financiero ante cambios en la carga tributaria?' }},
+      { block: 'B', text: { pt: 'Os contratos contemplam o impacto do split payment no fluxo financeiro da operação (antecipação de recolhimento pelo banco/plataforma)?', en: 'Do the contracts address the impact of split payment on the financial flow of the operation (advance collection by the bank/platform)?', es: '¿Los contratos contemplan el impacto del split payment en el flujo financiero de la operación (cobro anticipado por el banco/plataforma)?' }},
+      { block: 'B', text: { pt: 'Os contratos definem claramente a composição tributária do preço, separando tributos, retenções e valor líquido?', en: 'Do the contracts clearly define the tax composition of the price, separating taxes, withholdings, and net value?', es: '¿Los contratos definen claramente la composición tributaria del precio, separando impuestos, retenciones y valor neto?' }},
+      { block: 'B', text: { pt: 'Existe previsão contratual de revisão de preços decorrente das mudanças da Reforma Tributária (substituição de PIS/COFINS/ISS/ICMS por CBS/IBS/IS)?', en: 'Is there a contractual provision for price revision due to Tax Reform changes (replacement of PIS/COFINS/ISS/ICMS by CBS/IBS/IS)?', es: '¿Existe previsión contractual de revisión de precios por los cambios de la Reforma Tributaria (sustitución de PIS/COFINS/ISS/ICMS por CBS/IBS/IS)?' }},
+      /* Bloco C */
+      { block: 'C', text: { pt: 'Os contratos com clientes possuem cláusula que permita o repasse de novos tributos ou mudanças na carga tributária?', en: 'Do client contracts include a clause allowing the pass-through of new taxes or changes in the tax burden?', es: '¿Los contratos con clientes incluyen una cláusula que permita el traslado de nuevos tributos o cambios en la carga tributaria?' }},
+      { block: 'C', text: { pt: 'Os contratos deixam claro quando a empresa atua como prestadora direta versus intermediadora/gestora da operação (impacto na base de cálculo)?', en: 'Do the contracts clarify when the company acts as a direct provider versus an intermediary/manager (impact on the tax base)?', es: '¿Los contratos aclaran cuándo la empresa actúa como prestadora directa frente a intermediadora/gestora de la operación (impacto en la base de cálculo)?' }},
+      { block: 'C', text: { pt: 'Os contratos com clientes já foram revisados considerando CBS, IBS, split payment e eventuais mudanças na composição de preços?', en: 'Have client contracts already been reviewed considering CBS, IBS, split payment, and potential changes in price composition?', es: '¿Los contratos con clientes ya fueron revisados considerando CBS, IBS, split payment y posibles cambios en la composición de precios?' }},
+      { block: 'C', text: { pt: 'Há definição contratual clara sobre créditos tributários — quem os aproveita e como são refletidos na formação de preço?', en: 'Is there a clear contractual definition of tax credits — who benefits from them and how they are reflected in pricing?', es: '¿Existe definición contractual clara sobre créditos tributarios — quién los aprovecha y cómo se reflejan en la formación de precios?' }},
+      /* Bloco D */
+      { block: 'D', text: { pt: 'Existe área ou profissional formalmente responsável pelo monitoramento dos impactos da Reforma Tributária?', en: 'Is there a formally designated team or professional responsible for monitoring the impacts of the Tax Reform?', es: '¿Existe un área o profesional formalmente responsable del monitoreo de los impactos de la Reforma Tributaria?' }},
+      { block: 'D', text: { pt: 'As áreas de Jurídico, Fiscal e Suprimentos atuam de forma integrada na análise de contratos e qualificação de fornecedores?', en: 'Do the Legal, Tax, and Procurement departments work in an integrated manner in contract analysis and supplier qualification?', es: '¿Las áreas de Legal, Fiscal y Compras actúan de forma integrada en el análisis de contratos y calificación de proveedores?' }},
+      { block: 'D', text: { pt: 'A empresa utiliza ferramenta sistêmica para gestão de contratos (controle de vencimentos, aditivos e cláusulas-chave)?', en: 'Does the company use a system for contract management (tracking deadlines, amendments, and key clauses)?', es: '¿La empresa utiliza una herramienta sistémica para la gestión de contratos (control de vencimientos, adendas y cláusulas clave)?' }},
+      { block: 'D', text: { pt: 'Foi realizado diagnóstico interno sobre os impactos da Reforma Tributária nos contratos, fornecedores e processos da empresa?', en: "Has an internal assessment been conducted on the Tax Reform's impacts on the company's contracts, suppliers, and processes?", es: '¿Se realizó un diagnóstico interno sobre los impactos de la Reforma Tributaria en los contratos, proveedores y procesos de la empresa?' }},
+      /* Bloco E */
+      { block: 'E', text: { pt: 'A empresa já identificou quais contratos (clientes e fornecedores) precisam ser revisados em função da Reforma Tributária?', en: 'Has the company already identified which contracts (clients and suppliers) need to be revised due to the Tax Reform?', es: '¿La empresa ya identificó qué contratos (clientes y proveedores) necesitan ser revisados en función de la Reforma Tributaria?' }},
+      { block: 'E', text: { pt: 'Foi avaliado o impacto do split payment no fluxo de caixa operacional da empresa?', en: "Has the impact of split payment on the company's operational cash flow been assessed?", es: '¿Se evaluó el impacto del split payment en el flujo de caja operacional de la empresa?' }},
+      { block: 'E', text: { pt: 'A cadeia de fornecedores foi mapeada quanto à capacidade de gerar créditos de CBS/IBS aproveitáveis pela empresa?', en: 'Has the supply chain been mapped regarding its capacity to generate CBS/IBS tax credits usable by the company?', es: '¿La cadena de proveedores fue mapeada en cuanto a su capacidad para generar créditos de CBS/IBS aprovechables por la empresa?' }},
+      { block: 'E', text: { pt: 'Existe plano estruturado para adequação de contratos, processos e sistemas à Reforma Tributária, com responsáveis e prazos definidos?', en: 'Is there a structured plan for adapting contracts, processes, and systems to the Tax Reform, with defined owners and deadlines?', es: '¿Existe un plan estructurado para la adecuación de contratos, procesos y sistemas a la Reforma Tributaria, con responsables y plazos definidos?' }}
+    ]
+
+    /* ── estado ── */
+    var PTS        = [2, 1, 0, 0]   /* índices 0=Sim 1=EmAndamento 2=Não 3=NãoSei */
+    var qIndex     = 0
+    var blockScore = { A: 0, B: 0, C: 0, D: 0, E: 0 }
+    var answers    = []             /* armazena índice de opção (0-3) por pergunta */
+
+    /* ── troca de views ── */
+    function showView (id) {
+      document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active') })
+      document.getElementById(id).classList.add('active')
+      history.pushState({ view: id }, '')
+    }
+
+    /* Registra estado inicial para o histórico funcionar da primeira view */
+    history.replaceState({ view: 'view-home' }, '')
+
+    /* Restaura view ao navegar com history.back() ou botão Voltar do browser */
+    window.addEventListener('popstate', function (e) {
+      var state = e.state || { view: 'view-home' }
+      var id    = state.view || 'view-home'
+
+      document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active') })
+      document.getElementById(id).classList.add('active')
+
+      if (id === 'view-quiz') {
+        answers    = (state.answers || []).slice()
+        qIndex     = state.qIndex || 0
+        blockScore = { A: 0, B: 0, C: 0, D: 0, E: 0 }
+        for (var i = 0; i < answers.length; i++) {
+          blockScore[QUESTIONS[i].block] += PTS[answers[i]]
+        }
+        renderQuestion(qIndex)
+      }
+    })
+
+    /* ── inicia / reinicia quiz ── */
+    function startQuiz () {
+      qIndex     = 0
+      blockScore = { A: 0, B: 0, C: 0, D: 0, E: 0 }
+      answers    = []
+      renderQuestion(0)
+      showView('view-quiz')
+      history.replaceState({ view: 'view-quiz', qIndex: 0, answers: [] }, '')
+    }
+
+    /* ── renderiza pergunta ── */
+    var ANS_IDS = ['ans-sim', 'ans-andamento', 'ans-nao', 'ans-nao-sei']
+
+    function renderQuestion (i) {
+      var q       = QUESTIONS[i]
+      var b       = BLOCKS[q.block]
+      var t       = T[lang]
+      var pct     = Math.round((i / QUESTIONS.length) * 100)
+      var isFirst = i === 0
+
+      document.getElementById('quiz-title').textContent    = isFirst ? t.quiz_start : b.name[lang]
+      document.getElementById('quiz-title').style.fontSize = isFirst ? '38px' : '26px'
+      document.getElementById('quiz-question').textContent = q.text[lang]
+      document.getElementById('quiz-counter').textContent  = (i + 1) + t.counter_sep + QUESTIONS.length
+      document.getElementById('quiz-bar').style.width      = pct + '%'
+
+      /* Destacar resposta anterior ao voltar */
+      var sel = history.state && history.state.selectedForCurrent
+      ANS_IDS.forEach(function (id, idx) {
+        document.getElementById(id).classList.toggle('selected', idx === sel)
+      })
+    }
+
+    /* ── registra resposta e avança ── */
+    function answer (optIdx) {
+      /* Grava a seleção no estado atual para ser exibida ao voltar */
+      var cur = history.state || {}
+      history.replaceState({ view: cur.view, qIndex: cur.qIndex, answers: cur.answers, selectedForCurrent: optIdx }, '')
+
+      answers[qIndex] = optIdx
+      var q   = QUESTIONS[qIndex]
+      var pts = PTS[optIdx]
+      blockScore[q.block] += pts
+      qIndex++
+      if (qIndex < QUESTIONS.length) {
+        history.pushState({ view: 'view-quiz', qIndex: qIndex, answers: answers.slice(0, qIndex) }, '')
+        renderQuestion(qIndex)
+      } else {
+        showResults()
+      }
+    }
+
+    /* ── calcula e exibe resultado ── */
+    function riskLevel (pct) {
+      var t = T[lang]
+      return pct >= 70 ? t.risk[0] : pct >= 40 ? t.risk[1] : t.risk[2]
+    }
+    function riskColor (pct) {
+      return pct >= 70 ? '#16A34A' : pct >= 40 ? '#D97706' : '#DC2626'
+    }
+    function riskBg (pct) {
+      return pct >= 70 ? '#DCFCE7' : pct >= 40 ? '#FEF3C7' : '#FEE2E2'
+    }
+
+    function showResults () {
+      var totalMax   = 40
+      var totalScore = Object.keys(blockScore).reduce(function (s, k) { return s + blockScore[k] }, 0)
+      var totalPct   = Math.round((totalScore / totalMax) * 100)
+      var level      = riskLevel(totalPct)
+      var color      = riskColor(totalPct)
+      var bg         = riskBg(totalPct)
+
+      document.getElementById('res-score-pct').textContent    = totalPct + '%'
+      var badge = document.getElementById('res-level-badge')
+      badge.textContent      = level
+      badge.style.background = bg
+      badge.style.color      = color
+
+      var container = document.getElementById('res-blocks')
+      container.innerHTML = ''
+      Object.keys(BLOCKS).forEach(function (k) {
+        var b    = BLOCKS[k]
+        var sc   = blockScore[k]
+        var pct  = Math.round((sc / b.max) * 100)
+        var col  = riskColor(pct)
+        var bgc  = riskBg(pct)
+        var lvl  = riskLevel(pct)
+
+        var row = document.createElement('div')
+        row.style.cssText = 'background:#fff;border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;'
+
+        var top = document.createElement('div')
+        top.style.cssText = 'display:flex;justify-content:space-between;align-items:center;'
+        top.innerHTML =
+          '<span style="font-size:13px;font-weight:600;color:#374151;">' + b.label[lang] + ' — ' + b.name[lang] + '</span>' +
+          '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:' + bgc + ';color:' + col + ';">' + lvl + '</span>'
+
+        var barWrap = document.createElement('div')
+        barWrap.style.cssText = 'height:4px;background:#E5E7EB;border-radius:2px;'
+        var bar = document.createElement('div')
+        bar.style.cssText = 'height:4px;border-radius:2px;background:' + col + ';width:' + pct + '%;'
+        barWrap.appendChild(bar)
+
+        var action = document.createElement('p')
+        action.style.cssText = 'font-size:12px;color:#6B7280;margin:0;'
+        action.textContent = b.action[lang]
+
+        row.appendChild(top)
+        row.appendChild(barWrap)
+        row.appendChild(action)
+        container.appendChild(row)
+      })
+
+      document.getElementById('quiz-bar').style.width = '100%'
+      showView('view-result')
+    }
+
+
+    /* ══════════════════════════════════════
+       Animação do avatar (homepage)
+    ══════════════════════════════════════ */
+    ;(function () {
+      var photos  = Array.from(document.querySelectorAll('.av-photo'))
+      var corners = ['c-tl','c-bl','c-tr','c-br'].map(function (id) { return document.getElementById(id) })
+      var OPEN    = ['translate(-13px,-13px)','translate(-13px, 13px)','translate( 13px,-13px)','translate( 13px, 13px)']
+      var current = 0
+      var busy    = false
+
+      function setFrame (open) {
+        corners.forEach(function (c, i) { c.style.transform = open ? OPEN[i] : '' })
+      }
+      function sleep (ms) { return new Promise(function (r) { setTimeout(r, ms) }) }
+
+      async function cycle () {
+        if (busy) return
+        busy = true
+        var next = (current + 1) % photos.length
+        var outP = photos[current]
+        var inP  = photos[next]
+        inP.style.transition = 'none'
+        inP.style.transform  = 'translateX(120px)'
+        await sleep(16)
+        setFrame(true)
+        await sleep(300)
+        outP.style.transition = 'transform 0.44s cubic-bezier(0.4,0,0.2,1)'
+        outP.style.transform  = 'translateX(-120px)'
+        inP.style.transition  = 'transform 0.44s cubic-bezier(0.4,0,0.2,1)'
+        inP.style.transform   = 'translateX(0)'
+        await sleep(460)
+        setFrame(false)
+        await sleep(400)
+        outP.style.transition = 'none'
+        outP.style.transform  = 'translateX(120px)'
+        current = next
+        busy    = false
+      }
+
+      setInterval(cycle, 4400)
+    })()
+
+
+    /* ── Vídeo de fundo — carrega sem bloquear, fade-in ao ficar pronto ── */
+    ;(function () {
+      var v = document.getElementById('bg-video')
+
+      function fadeIn () { v.style.opacity = '0.7' }
+
+      v.addEventListener('canplay', fadeIn, { once: true })
+
+      /* Fallback: se o evento já disparou antes do listener (cache local) */
+      if (v.readyState >= 3) fadeIn()
+    })()
+  </script>
+</body>
+</html>

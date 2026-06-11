@@ -1,0 +1,12 @@
+# Next.js
+diagnostico-rt/.next/
+diagnostico-rt/node_modules/
+
+# Env
+.env
+.env.local
+.env*.local
+
+# OS
+.DS_Store
+Thumbs.db
