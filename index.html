@@ -47,6 +47,27 @@
     .view { opacity: 0; transition: opacity 0.22s ease; }
     .view.active { opacity: 1; }
 
+    /* ── Formulário de captura ── */
+    .hs-card{background:#fff;border:1px solid #d8d8d2;border-radius:12px;padding:2rem;margin-top:8px;}
+    .hs-titulo{font-size:18px;margin:0 0 4px;font-weight:600;color:#0F1D4B;}
+    .hs-sub{font-size:13px;color:#5F5E5A;margin:0 0 1.5rem;}
+    .hs-card label{font-size:13px;color:#5F5E5A;display:block;margin-bottom:4px;font-weight:500;}
+    .hs-card input,.hs-card select{width:100%;height:40px;padding:0 12px;border:1px solid #d8d8d2;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;transition:border-color .15s;box-sizing:border-box;}
+    .hs-card input:focus,.hs-card select:focus{outline:none;border-color:#00D9BD;}
+    .hs-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .hs-field{margin-bottom:12px;}
+    .hs-privacy{font-size:12px;color:#5F5E5A;margin:8px 0 16px;line-height:1.5;}
+    .hs-privacy a{color:#0F1D4B;}
+    .hs-btn-enviar{width:100%;background:#0F1D4B;color:#fff;border:none;border-radius:8px;cursor:pointer;padding:12px;font-family:inherit;font-weight:600;font-size:15px;transition:opacity .15s;}
+    .hs-btn-enviar:disabled{opacity:.5;cursor:not-allowed;}
+    .hs-btn-enviar:active{transform:scale(.99);}
+    #hs-status{font-size:13px;min-height:18px;margin-top:10px;}
+    .hs-scoring-box{border-top:1px solid #d8d8d2;margin-top:20px;padding-top:16px;}
+    .hs-scoring-hint{font-size:12px;color:#5F5E5A;margin:0 0 8px;}
+    .hs-btn-scoring{width:100%;background:#00D9BD;color:#0F1D4B;border:none;border-radius:8px;cursor:not-allowed;padding:12px;font-family:inherit;font-weight:600;font-size:15px;opacity:.4;transition:opacity .15s;}
+    .hs-btn-scoring.ativo{opacity:1;cursor:pointer;}
+    @media(max-width:480px){.hs-row{grid-template-columns:1fr;}}
+
     .ans-btn {
       padding: 12px 24px;
       border-radius: 999px;
@@ -282,6 +303,91 @@
 
 
   <!-- ══════════════════════════════════════
+       VIEW 2.5 — Formulário
+  ══════════════════════════════════════ -->
+  <div id="view-form" class="view">
+    <main class="flex-1 flex flex-col items-center px-4 pt-4 pb-2" style="overflow-y:auto;min-height:0;">
+      <div id="form-container" style="width:100%;max-width:520px;">
+
+        <div class="hs-card">
+          <h1 class="hs-titulo">Diagnóstico Reforma Tributária</h1>
+          <p class="hs-sub">Preencha seus dados para liberar seu scoring.</p>
+
+          <div id="hsForm">
+            <div class="hs-field">
+              <label for="f_nome">Nome completo *</label>
+              <input id="f_nome" type="text" autocomplete="name" />
+            </div>
+            <div class="hs-row">
+              <div class="hs-field">
+                <label for="f_tel">Telefone *</label>
+                <input id="f_tel" type="tel" autocomplete="tel" placeholder="+55 12 99999-9999" />
+              </div>
+              <div class="hs-field">
+                <label for="f_email">Email *</label>
+                <input id="f_email" type="email" autocomplete="email" />
+              </div>
+            </div>
+            <div class="hs-row">
+              <div class="hs-field">
+                <label for="f_cargo">Cargo *</label>
+                <input id="f_cargo" type="text" autocomplete="organization-title" />
+              </div>
+              <div class="hs-field">
+                <label for="f_empresa">Nome da empresa *</label>
+                <input id="f_empresa" type="text" autocomplete="organization" />
+              </div>
+            </div>
+            <div class="hs-field">
+              <label for="f_segmento">Segmento da empresa *</label>
+              <select id="f_segmento">
+                <option value="">Selecione...</option>
+                <option>Tecnologia e Software</option>
+                <option>Saúde</option>
+                <option>Educação</option>
+                <option>Comércio (varejo/atacado)</option>
+                <option>Serviços Financeiros</option>
+                <option>Manufatura</option>
+                <option>Construção e Imobiliário</option>
+                <option>Alimentação e Bebidas</option>
+                <option>Agronegócio</option>
+                <option>Logística e Transporte</option>
+              </select>
+            </div>
+            <p class="hs-privacy">
+              Ao informar meus dados, estou ciente de que o tratamento dos dados pessoais
+              ocorrerá conforme a <a href="#" target="_blank" rel="noopener">política de privacidade</a>.
+            </p>
+            <div class="hs-field">
+              <label for="f_regime">Regime fiscal *</label>
+              <select id="f_regime">
+                <option value="">Selecione...</option>
+                <option>Lucro Presumido</option>
+                <option>Lucro Real</option>
+                <option>Simples Nacional</option>
+                <option>Outros</option>
+              </select>
+            </div>
+            <button type="button" id="btnEnviar" class="hs-btn-enviar">Enviar</button>
+            <div id="hs-status"></div>
+          </div>
+
+          <div class="hs-scoring-box">
+            <p class="hs-scoring-hint">Seu scoring será liberado após o envio dos dados.</p>
+            <button type="button" id="btnScoring" class="hs-btn-scoring" disabled>Ver análise</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <footer class="w-full text-center pt-4 pb-[39px] shrink-0">
+      <p class="footer-copy" style="color:#9CA3AF;font-size:12px;">© 2026 CLA Brasil — todos os direitos reservados</p>
+    </footer>
+  </div><!-- /view-form -->
+
+
+  <!-- ══════════════════════════════════════
        VIEW 3 — Resultado
   ══════════════════════════════════════ -->
   <div id="view-result" class="view">
@@ -346,6 +452,9 @@
         risk: ['BAIXO RISCO', 'RISCO MÉDIO', 'ALTO RISCO'],
         quiz_start: 'Vamos começar!',
         counter_sep: ' de ',
+        form_title: 'Quase lá!',
+        form_desc: 'Preencha os dados abaixo para liberar o impacto fiscal da sua cadeia.',
+        form_cta: 'Ver Impacto',
       },
       en: {
         nav_specialist: 'Talk to a specialist',
@@ -362,6 +471,9 @@
         risk: ['LOW RISK', 'MEDIUM RISK', 'HIGH RISK'],
         quiz_start: "Let's begin!",
         counter_sep: ' of ',
+        form_title: 'Almost there!',
+        form_desc: 'Fill in the details below to unlock your supply chain\'s fiscal impact.',
+        form_cta: 'See Impact',
       },
       es: {
         nav_specialist: 'Habla con un especialista',
@@ -378,6 +490,9 @@
         risk: ['BAJO RIESGO', 'RIESGO MEDIO', 'ALTO RIESGO'],
         quiz_start: '¡Comencemos!',
         counter_sep: ' de ',
+        form_title: '¡Casi listo!',
+        form_desc: 'Complete los datos a continuación para ver el impacto fiscal de su cadena.',
+        form_cta: 'Ver Impacto',
       }
     }
 
@@ -424,6 +539,9 @@
       document.getElementById('res-score-label').textContent = t.score_label
       document.getElementById('res-redo-btn').textContent = t.redo
       document.getElementById('res-specialist-btn').textContent = t.res_specialist
+      document.getElementById('form-title').textContent = t.form_title
+      document.getElementById('form-desc').textContent = t.form_desc
+      document.getElementById('form-cta-text').textContent = t.form_cta
       if (document.getElementById('view-quiz').classList.contains('active')) renderQuestion(qIndex)
       if (document.getElementById('view-result').classList.contains('active')) showResults()
     }
@@ -575,7 +693,7 @@
         history.pushState({ view: 'view-quiz', qIndex: qIndex, answers: answers.slice(0, qIndex) }, '')
         renderQuestion(qIndex)
       } else {
-        showResults()
+        showView('view-form')
       }
     }
 
@@ -684,6 +802,8 @@
     })()
 
 
+
+
     /* ── Vídeo de fundo — carrega sem bloquear, fade-in ao ficar pronto ── */
     ;(function () {
       var v = document.getElementById('bg-video')
@@ -695,6 +815,95 @@
       /* Fallback: se o evento já disparou antes do listener (cache local) */
       if (v.readyState >= 3) fadeIn()
     })()
+  </script>
+
+  <!-- ── HubSpot tracking + formulário de captura ── -->
+  <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/39496260.js"></script>
+  <script>
+  ;(function () {
+    var PORTAL_ID = "39496260";
+    var FORM_GUID = "89f77c45-b386-45f3-ba63-4002e98660a7";
+    var ENDPOINT  = "https://api.hsforms.com/submissions/v3/integration/submit/" + PORTAL_ID + "/" + FORM_GUID;
+
+    function getCookie(name) {
+      var v = "; " + document.cookie;
+      var parts = v.split("; " + name + "=");
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    }
+
+    function setStatus(msg, cor) {
+      var el = document.getElementById("hs-status");
+      el.textContent = msg;
+      el.style.color = cor || "#5F5E5A";
+    }
+
+    function validarEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+    document.getElementById("btnScoring").addEventListener("click", function () {
+      if (this.disabled) return;
+      showResults();
+    });
+
+    document.getElementById("btnEnviar").addEventListener("click", async function () {
+      var dados = {
+        nome:     document.getElementById("f_nome").value.trim(),
+        tel:      document.getElementById("f_tel").value.trim(),
+        email:    document.getElementById("f_email").value.trim(),
+        cargo:    document.getElementById("f_cargo").value.trim(),
+        empresa:  document.getElementById("f_empresa").value.trim(),
+        segmento: document.getElementById("f_segmento").value,
+        regime:   document.getElementById("f_regime").value
+      };
+
+      if (!dados.nome || !dados.tel || !dados.email || !dados.cargo ||
+          !dados.empresa || !dados.segmento || !dados.regime) {
+        setStatus("Preencha todos os campos obrigatórios.", "#A32D2D"); return;
+      }
+      if (!validarEmail(dados.email)) {
+        setStatus("Email inválido.", "#A32D2D"); return;
+      }
+
+      setStatus("Enviando...");
+      this.disabled = true;
+
+      var ctx = { pageUri: location.href, pageName: document.title };
+      var hutk = getCookie("hubspotutk");
+      if (hutk) ctx.hutk = hutk;
+
+      var payload = {
+        fields: [
+          { name: "firstname",           value: dados.nome },
+          { name: "phone",               value: dados.tel },
+          { name: "email",               value: dados.email },
+          { name: "jobtitle",            value: dados.cargo },
+          { name: "company",             value: dados.empresa },
+          { name: "segmento_da_empresa", value: dados.segmento },
+          { objectTypeId: "0-2", name: "name",          value: dados.empresa },
+          { objectTypeId: "0-2", name: "regime_fiscal", value: dados.regime }
+        ],
+        context: ctx
+      };
+
+      try {
+        var res  = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        var data = await res.json();
+        if (res.ok) {
+          setStatus("✓ Dados enviados com sucesso.", "#0F6E56");
+          var btn = document.getElementById("btnScoring");
+          btn.disabled = false;
+          btn.classList.add("ativo");
+        } else {
+          var msg = data.message || (data.errors && JSON.stringify(data.errors)) || "Erro no envio.";
+          setStatus("Erro: " + msg, "#A32D2D");
+          document.getElementById("btnEnviar").disabled = false;
+        }
+      } catch (err) {
+        setStatus("Falha de rede. Tente novamente.", "#A32D2D");
+        document.getElementById("btnEnviar").disabled = false;
+      }
+    });
+  })();
   </script>
 </body>
 </html>
