@@ -137,15 +137,10 @@
 
     /* ── mobile ≤ 639 px ── */
     @media (max-width: 639px) {
-      /* vídeo oculto; gradiente sutil no body substitui o fundo visual */
-      #bg-video { display: none; }
-      body { background: linear-gradient(160deg, #eef1fb 0%, #f4f6fc 35%, #ffffff 100%); }
-
-      /* CTA fix: justify-start garante scroll completo até o botão */
       #view-home > main {
         overflow-y: auto; min-height: 0;
         padding: 16px 24px 28px !important;
-        justify-content: flex-start !important;
+        justify-content: center !important;
       }
       #view-quiz > main { overflow-y: auto; min-height: 0; }
 
