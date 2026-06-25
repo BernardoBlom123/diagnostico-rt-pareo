@@ -149,6 +149,10 @@
       #quiz-title    { font-size: 20px !important; margin-bottom: 16px !important; }
       #quiz-question { font-size: 14px !important; margin-bottom: 28px !important; }
     }
+    @keyframes radar-pulse {
+      0%   { transform: scale(1);   opacity: 0.6; }
+      100% { transform: scale(2.5); opacity: 0;   }
+    }
   </style>
 </head>
 <body class="h-screen flex flex-col">
@@ -823,8 +827,28 @@
       var OVERLAP   = 110    /* ms — avanço do próximo antes do atual terminar de sair */
 
       var clip = document.getElementById('photo-clip')
-      var sz   = document.getElementById('avatar-wrap').offsetWidth || 120
+      var wrap = document.getElementById('avatar-wrap')
+      var sz   = wrap.offsetWidth || 120
       var base = 'position:absolute;top:0;left:0;width:' + sz + 'px;height:' + sz + 'px;'
+
+      /* ── anéis de radar ─────────────────────────────────
+       * Três anéis concêntricos partem da borda do ícone
+       * e se expandem para fora, desvanecendo como ondas.
+       * Inseridos antes do photo-clip → ficam atrás do ícone.
+       */
+      var ringD   = Math.round(sz * 0.75)          /* 90 px — coincide com o clip circular */
+      var ringOff = Math.round((sz - ringD) / 2)   /* 15 px — centraliza no wrap           */
+      ;[0, 0.9, 1.8].forEach(function (delay) {
+        var ring = document.createElement('span')
+        ring.style.cssText = 'position:absolute;'
+          + 'width:' + ringD + 'px;height:' + ringD + 'px;'
+          + 'border-radius:50%;'
+          + 'border:1.5px solid rgba(125,210,211,0.8);'
+          + 'top:' + ringOff + 'px;left:' + ringOff + 'px;'
+          + 'animation:radar-pulse 2.7s ease-out ' + delay + 's infinite;'
+          + 'pointer-events:none;'
+        wrap.insertBefore(ring, clip)   /* atrás do ícone */
+      })
 
       /* dois elementos em ping-pong */
       var elA = new Image()
