@@ -57,10 +57,14 @@
     .hs-card input:focus,.hs-card select:focus{outline:none;border-color:#00D9BD;}
     .hs-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
     .hs-field{margin-bottom:8px;}
-    .hs-terms-field{display:flex;align-items:flex-start;gap:8px;margin:6px 0 10px;}
+    .hs-terms-field{display:flex;align-items:flex-start;gap:8px;margin:6px 0 10px;border-radius:6px;transition:background .2s;}
+    .hs-terms-field.error{background:rgba(163,45,45,0.07);padding:6px 8px;margin:-2px -8px 10px;animation:terms-shake .35s ease;}
     .hs-terms-field input[type="checkbox"]{width:15px;height:15px;margin-top:2px;flex-shrink:0;accent-color:#0F1D4B;cursor:pointer;}
+    .hs-terms-field.error input[type="checkbox"]{outline:2px solid #A32D2D;outline-offset:2px;border-radius:2px;}
     .hs-terms-field label{font-size:12px;color:#5F5E5A;line-height:1.5;cursor:pointer;margin:0;font-weight:400;}
+    .hs-terms-field.error label{color:#A32D2D;}
     .hs-terms-field a{color:#0F1D4B;text-decoration:underline;}
+    @keyframes terms-shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
     .hs-btn-enviar{width:100%;background:#0F1D4B;color:#fff;border:none;border-radius:8px;cursor:pointer;padding:12px;font-family:inherit;font-weight:600;font-size:15px;transition:background .3s,opacity .15s;}
     .hs-btn-enviar:disabled{opacity:.5;cursor:not-allowed;}
     .hs-btn-enviar.enviado{background:#16a34a !important;opacity:1 !important;cursor:default;}
@@ -466,7 +470,7 @@
               </select>
             </div>
             <div class="hs-terms-field">
-              <input type="checkbox" id="f_termos" />
+              <input type="checkbox" id="f_termos" required />
               <label for="f_termos"><span id="form-terms-pre">Li e concordo com os </span><a id="form-terms-link" href="termos.html" target="_blank" rel="noopener">termos de uso</a><span id="form-terms-post"> e autorizo o tratamento dos meus dados conforme a LGPD.</span></label>
             </div>
             <button type="button" id="btnEnviar" class="hs-btn-enviar">Enviar</button>
@@ -1128,6 +1132,10 @@
 
     function validarEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 
+    document.getElementById("f_termos").addEventListener("change", function () {
+      if (this.checked) document.querySelector(".hs-terms-field").classList.remove("error");
+    });
+
     document.getElementById("btnScoring").addEventListener("click", function () {
       if (this.disabled) return;
       showResults();
@@ -1152,6 +1160,10 @@
         setStatus(T[lang].val_email, "#A32D2D"); return;
       }
       if (!document.getElementById("f_termos").checked) {
+        var tf = document.querySelector(".hs-terms-field");
+        tf.classList.remove("error");
+        void tf.offsetWidth;
+        tf.classList.add("error");
         setStatus(T[lang].val_terms, "#A32D2D"); return;
       }
 
