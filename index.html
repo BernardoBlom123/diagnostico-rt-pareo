@@ -147,7 +147,8 @@
       #avatar-wrap    { margin-bottom: 12px !important; }
       #hero-h1        { margin-bottom: 10px !important; }
       #hero-content   { width: 100% !important; margin-bottom: 20px !important; }
-      #hero-h2        { font-size: 13px !important; margin-bottom: 10px !important; }
+      #hero-h2        { font-size: 13px !important; margin-bottom: 6px !important; }
+      #scroll-hint    { display: flex; justify-content: center; margin: 0 0 14px; animation: scroll-bounce 1.7s ease-in-out infinite; }
 
       /* cards: mesma aparência do desktop, apenas empilhados em coluna */
       #hero-cards-row { flex-direction: column !important; gap: 8px !important; }
@@ -220,6 +221,13 @@
       text-align: left;
     }
 
+    #scroll-hint { display: none; }
+
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateY(0);   opacity: 0.45; }
+      50%       { transform: translateY(7px); opacity: 1;    }
+    }
+
     @keyframes radar-pulse {
       0%   { transform: scale(1);   opacity: 0.6; }
       100% { transform: scale(2.5); opacity: 0;   }
@@ -281,7 +289,12 @@
         A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?
       </h1>
 
-      <h2 id="hero-h2" style="font-size:15px;font-weight:500;color:#6B7280;margin:0 0 16px;text-align:center;letter-spacing:0.01em;width:100%;">Como esta análise pode te ajudar</h2>
+      <h2 id="hero-h2" style="font-size:15px;font-weight:500;color:#6B7280;margin:0 0 16px;text-align:center;letter-spacing:0.01em;width:100%;">Descubra impactos em:</h2>
+
+      <!-- scroll hint — somente mobile -->
+      <div id="scroll-hint" aria-hidden="true">
+        <i data-lucide="chevrons-down" width="22" height="22" stroke="#00D9BD" stroke-width="2"></i>
+      </div>
 
       <!-- hero cards -->
       <div id="hero-cards-row" style="display:flex;gap:10px;width:100%;">
@@ -511,7 +524,7 @@
       pt: {
         h1: 'A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?',
         hero_desc: 'Descubra em minutos se os fornecedores expõem sua empresa a perda de créditos, bloqueios no split payment e riscos fiscais invisíveis.',
-        hero_h2: 'Como esta análise pode te ajudar',
+        hero_h2: 'Descubra impactos em:',
         hc1t:'Perda de créditos', hc1d:'CBS e IBS não aproveitados por fornecedores inaptos',
         hc2t:'Bloqueios no split', hc2d:'Repasse automático travado por fornecedores irregulares',
         hc3t:'Riscos invisíveis',  hc3d:'Passivos fiscais ocultos que só surgem na auditoria',
@@ -552,7 +565,7 @@
       en: {
         h1: 'The Tax Reform has arrived<br>Is your supply chain ready?',
         hero_desc: 'Discover in minutes whether your suppliers expose your company to credit losses, split payment blocks, and invisible tax risks.',
-        hero_h2: 'How this analysis can help you',
+        hero_h2: 'Discover impacts in:',
         hc1t:'Credit losses',       hc1d:'CBS and IBS blocked by non-compliant suppliers',
         hc2t:'Split payment blocks',hc2d:'Automated tax transfers frozen mid-chain',
         hc3t:'Invisible risks',     hc3d:'Hidden fiscal liabilities only found in audits',
@@ -593,7 +606,7 @@
       es: {
         h1: 'La Reforma Tributaria llegó<br>¿Tu cadena de proveedores está lista?',
         hero_desc: 'Descubre en minutos si tus proveedores exponen a tu empresa a pérdida de créditos, bloqueos en el split payment y riesgos fiscales invisibles.',
-        hero_h2: 'Cómo este análisis puede ayudarte',
+        hero_h2: 'Descubre impactos en:',
         hc1t:'Pérdida de créditos', hc1d:'CBS e IBS bloqueados por proveedores no aptos',
         hc2t:'Bloqueos en el split', hc2d:'Reparto automático frenado por irregulares en la cadena',
         hc3t:'Riesgos invisibles',   hc3d:'Pasivos fiscales ocultos que afloran en la auditoría',
