@@ -67,13 +67,6 @@
     #hs-status{font-size:13px;min-height:18px;margin-top:8px;}
     .hs-scoring-box{border-top:1px solid #d8d8d2;margin-top:14px;padding-top:12px;}
     .hs-scoring-hint{font-size:12px;color:#5F5E5A;margin:0 0 8px;}
-    /* estado pós-envio: apenas o botão de resultado fica visível */
-    .hs-card.submitted .hs-titulo,
-    .hs-card.submitted .hs-sub,
-    .hs-card.submitted #hsForm,
-    .hs-card.submitted .hs-scoring-hint { display:none !important; }
-    .hs-card.submitted .hs-scoring-box  { border-top:none; margin-top:0; padding-top:0; }
-    .hs-card.submitted .hs-btn-scoring  { font-size:16px; padding:14px; }
     .hs-btn-scoring{width:100%;background:#00D9BD;color:#0F1D4B;border:none;border-radius:8px;cursor:not-allowed;padding:12px;font-family:inherit;font-weight:600;font-size:15px;opacity:.4;transition:opacity .15s;}
     .hs-btn-scoring.ativo{opacity:1;cursor:pointer;}
     @media(max-width:480px){.hs-row{grid-template-columns:1fr;}}
@@ -1181,7 +1174,7 @@
         var res  = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         var data = await res.json();
         if (res.ok) {
-          document.querySelector('.hs-card').classList.add('submitted');
+          setStatus(T[lang].val_success, "#0F6E56");
           var btn = document.getElementById("btnScoring");
           btn.disabled = false;
           btn.classList.add("ativo");
