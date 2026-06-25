@@ -135,6 +135,9 @@
       transform: translateX(4px);
     }
 
+    /* oculto por padrão; ativado no media query mobile abaixo */
+    #scroll-hint { display: none; }
+
     /* ── mobile ≤ 639 px ── */
     @media (max-width: 639px) {
       #view-home > main {
@@ -220,8 +223,6 @@
       line-height: 1.55;
       text-align: left;
     }
-
-    #scroll-hint { display: none; }
 
     @keyframes scroll-bounce {
       0%, 100% { transform: translateY(0);   opacity: 0.65; }
