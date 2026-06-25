@@ -138,9 +138,7 @@
       /* Layout fix: permite o main rolar internamente, mantendo footer visível */
       #view-home > main { overflow-y: auto; min-height: 0; padding-top: 12px !important; padding-bottom: 12px !important; }
 
-      #nav-specialist-btn { display: none; }
-
-      #avatar-wrap { width: 72px !important; height: 72px !important; margin-bottom: 14px !important; }
+#avatar-wrap { width: 72px !important; height: 72px !important; margin-bottom: 14px !important; }
       #photo-clip  { clip-path: circle(27px at 50% 50%) !important; }
       .av-photo    { width: 72px !important; height: 72px !important; }
       #frame-svg   { width: 72px !important; height: 72px !important; }
@@ -185,13 +183,6 @@
             <button class="lang-option"        onclick="selectLang('es')" data-lang="es">Español</button>
           </div>
         </div>
-        <button id="nav-specialist-btn" style="border-color:#848484;color:#8E8E8E;"
-          class="flex items-center gap-2 px-5 py-2.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors whitespace-nowrap">
-          <span>Fale com um especialista</span>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
       </div>
     </div>
   </header>
@@ -205,17 +196,7 @@
 
       <!-- Avatar -->
       <div id="avatar-wrap" style="position:relative;width:120px;height:120px;margin-bottom:32px;">
-        <div id="photo-clip" style="position:absolute;inset:0;clip-path:circle(45px at 50% 50%);">
-          <img class="av-photo" src="links/hero-icon.svg"   alt="Especialista Páreo"
-               style="position:absolute;top:0;left:0;width:120px;height:120px;" />
-          <img class="av-photo" src="links/hero-icon-2.svg" alt="" aria-hidden="true"
-               style="position:absolute;top:0;left:0;width:120px;height:120px;transform:translateX(120px);" />
-          <img class="av-photo" src="links/hero-icon-3.svg" alt="" aria-hidden="true"
-               style="position:absolute;top:0;left:0;width:120px;height:120px;transform:translateX(120px);" />
-          <img class="av-photo" src="links/hero-icon-4.svg" alt="" aria-hidden="true"
-               style="position:absolute;top:0;left:0;width:120px;height:120px;transform:translateX(120px);" />
-
-        </div>
+        <div id="photo-clip" style="position:absolute;inset:0;clip-path:circle(45px at 50% 50%);overflow:hidden;"></div>
         <svg id="frame-svg" viewBox="0 0 175 175" width="120" height="120" fill="none"
              xmlns="http://www.w3.org/2000/svg"
              style="position:absolute;top:0;left:0;pointer-events:none;overflow:visible;">
@@ -249,20 +230,14 @@
         créditos, bloqueios no split payment e riscos fiscais invisíveis.
       </p>
 
-      <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto" style="max-width:420px;">
-        <button id="cta-specialist" style="border-color:#848484;color:#8E8E8E;"
-          class="w-full sm:w-auto px-7 py-3.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors whitespace-nowrap">
-          Fale com um especialista
-        </button>
-        <button id="cta-analyze" onclick="startQuiz()"
-          style="color:#fff;"
-          class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-full text-[15px] font-semibold whitespace-nowrap">
-          Analisar minha cadeia agora
-          <svg width="15" height="15" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
+      <button id="cta-analyze" onclick="startQuiz()"
+        style="color:#fff;"
+        class="flex items-center justify-center gap-3 px-8 py-4 rounded-full text-[15px] font-semibold whitespace-nowrap">
+        <span id="cta-analyze-text">Analisar minha cadeia agora</span>
+        <svg width="15" height="15" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
 
     </main>
     <footer class="w-full text-center pt-6 pb-[39px] shrink-0">
@@ -427,18 +402,11 @@
         <div id="res-blocks" style="display:flex;flex-direction:column;gap:10px;margin-bottom:40px;"></div>
 
         <!-- CTAs -->
-        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;justify-content:center;">
           <button id="res-redo-btn" onclick="startQuiz()"
             style="border-color:#848484;color:#8E8E8E;"
             class="px-7 py-3.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors">
             Refazer diagnóstico
-          </button>
-          <button id="res-specialist-btn"
-            style="background-color:#3D425D;color:#fff;"
-            class="px-7 py-3.5 rounded-full text-sm font-medium transition-colors"
-            onmouseover="this.style.backgroundColor='#31364E'"
-            onmouseout="this.style.backgroundColor='#3D425D'">
-            Fale com um especialista
           </button>
         </div>
 
@@ -458,16 +426,13 @@
 
     var T = {
       pt: {
-        nav_specialist: 'Fale com um especialista',
         h1: 'A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?',
         hero_desc: 'Descubra em minutos se os fornecedores expõem sua empresa a perda de créditos, bloqueios no split payment e riscos fiscais invisíveis.',
-        cta_specialist: 'Fale com um especialista',
         cta_analyze: 'Analisar minha cadeia agora',
         footer: '© 2026 CLA Brasil — todos os direitos reservados',
         back: 'Voltar',
         score_label: 'Score geral',
         redo: 'Refazer diagnóstico',
-        res_specialist: 'Fale com um especialista',
         ans: ['Sim', 'Em andamento', 'Não', 'Não sei'],
         risk: ['BAIXO RISCO', 'RISCO MÉDIO', 'ALTO RISCO'],
         quiz_start: 'Vamos começar!',
@@ -498,16 +463,13 @@
         val_network: 'Falha de rede. Tente novamente.',
       },
       en: {
-        nav_specialist: 'Talk to a specialist',
         h1: 'The Tax Reform has arrived<br>Is your supply chain ready?',
         hero_desc: 'Discover in minutes whether your suppliers expose your company to credit losses, split payment blocks, and invisible tax risks.',
-        cta_specialist: 'Talk to a specialist',
         cta_analyze: 'Analyze my chain now',
         footer: '© 2026 CLA Brasil — all rights reserved',
         back: 'Back',
         score_label: 'Overall Score',
         redo: 'Retake assessment',
-        res_specialist: 'Talk to a specialist',
         ans: ['Yes', 'In progress', 'No', "Don't know"],
         risk: ['LOW RISK', 'MEDIUM RISK', 'HIGH RISK'],
         quiz_start: "Let's begin!",
@@ -538,16 +500,13 @@
         val_network: 'Network error. Please try again.',
       },
       es: {
-        nav_specialist: 'Habla con un especialista',
         h1: 'La Reforma Tributaria llegó<br>¿Tu cadena de proveedores está lista?',
         hero_desc: 'Descubre en minutos si tus proveedores exponen a tu empresa a pérdida de créditos, bloqueos en el split payment y riesgos fiscales invisibles.',
-        cta_specialist: 'Habla con un especialista',
         cta_analyze: 'Analizar mi cadena ahora',
         footer: '© 2026 CLA Brasil — todos los derechos reservados',
         back: 'Volver',
         score_label: 'Puntuación general',
         redo: 'Repetir diagnóstico',
-        res_specialist: 'Habla con un especialista',
         ans: ['Sí', 'En progreso', 'No', 'No sé'],
         risk: ['BAJO RIESGO', 'RIESGO MEDIO', 'ALTO RIESGO'],
         quiz_start: '¡Comencemos!',
@@ -608,11 +567,9 @@
       document.querySelectorAll('.lang-option').forEach(function (btn) {
         btn.classList.toggle('active', btn.getAttribute('data-lang') === l)
       })
-      document.getElementById('nav-specialist-btn').querySelector('span').textContent = t.nav_specialist
       document.getElementById('hero-h1').innerHTML = t.h1
       document.getElementById('hero-desc').textContent = t.hero_desc
-      document.getElementById('cta-specialist').textContent = t.cta_specialist
-      document.getElementById('cta-analyze').textContent = t.cta_analyze
+      document.getElementById('cta-analyze-text').textContent = t.cta_analyze
       document.querySelectorAll('.footer-copy').forEach(function (el) { el.textContent = t.footer })
       document.getElementById('quiz-back-text').textContent = t.back
       document.getElementById('ans-sim').textContent = t.ans[0]
@@ -621,7 +578,6 @@
       document.getElementById('ans-nao-sei').textContent = t.ans[3]
       document.getElementById('res-score-label').textContent = t.score_label
       document.getElementById('res-redo-btn').textContent = t.redo
-      document.getElementById('res-specialist-btn').textContent = t.res_specialist
       document.getElementById('form-title').textContent = t.form_title
       document.getElementById('form-desc').textContent = t.form_desc
       document.getElementById('form-cta-text').textContent = t.form_cta
@@ -860,46 +816,106 @@
 
 
     /* ══════════════════════════════════════
-       Animação do avatar (homepage)
+       Roleta do avatar (homepage)
     ══════════════════════════════════════ */
     ;(function () {
-      var photos  = Array.from(document.querySelectorAll('.av-photo'))
+      /* reel: fotos intercaladas com animation-icons e animations */
+      var REEL = [
+        'links/hero-icon.svg',
+        'links/animation-icon.svg',
+        'links/hero-icon-2.svg',
+        'links/animation-icon-02.svg',
+        'links/hero-icon-3.svg',
+        'links/animation-01.svg',
+        'links/hero-icon-4.svg',
+        'links/animation-icon-04.svg',
+        'links/animation-02.svg',
+        'links/animation-03.svg',
+        'links/animation-04.svg',
+        'links/animation-05.svg',
+        'links/animation-06.svg',
+      ]
+
+      var clip    = document.getElementById('photo-clip')
       var corners = ['c-tl','c-bl','c-tr','c-br'].map(function (id) { return document.getElementById(id) })
-      var OPEN    = ['translate(-13px,-13px)','translate(-13px, 13px)','translate( 13px,-13px)','translate( 13px, 13px)']
-      var current = 0
-      var busy    = false
+      var OPEN    = ['translate(-13px,-13px)','translate(-13px,13px)','translate(13px,-13px)','translate(13px,13px)']
+      var sz      = document.getElementById('avatar-wrap').offsetWidth || 120
+
+      /* dois slots em ping-pong — entrada sempre vem de cima (slot machine) */
+      var slotA = document.createElement('img')
+      var slotB = document.createElement('img')
+      var base  = 'position:absolute;top:0;left:0;width:' + sz + 'px;height:' + sz + 'px;'
+      slotA.style.cssText = base
+      slotB.style.cssText = base + 'transform:translateY(-' + sz + 'px);'
+      slotA.src = REEL[0]
+      slotB.src = REEL[1]
+      clip.appendChild(slotA)
+      clip.appendChild(slotB)
+
+      var active   = slotA
+      var reelPos  = 0
+      var spinning = false
 
       function setFrame (open) {
         corners.forEach(function (c, i) { c.style.transform = open ? OPEN[i] : '' })
       }
       function sleep (ms) { return new Promise(function (r) { setTimeout(r, ms) }) }
 
-      async function cycle () {
-        if (busy) return
-        busy = true
-        var next = (current + 1) % photos.length
-        var outP = photos[current]
-        var inP  = photos[next]
-        var sz   = document.getElementById('avatar-wrap').offsetWidth
-        inP.style.transition = 'none'
-        inP.style.transform  = 'translateX(' + sz + 'px)'
-        await sleep(16)
-        setFrame(true)
-        await sleep(300)
-        outP.style.transition = 'transform 0.44s cubic-bezier(0.4,0,0.2,1)'
-        outP.style.transform  = 'translateX(-' + sz + 'px)'
-        inP.style.transition  = 'transform 0.44s cubic-bezier(0.4,0,0.2,1)'
-        inP.style.transform   = 'translateX(0)'
-        await sleep(460)
-        setFrame(false)
-        await sleep(400)
-        outP.style.transition = 'none'
-        outP.style.transform  = 'translateX(' + sz + 'px)'
-        current = next
-        busy    = false
+      async function showStep (src, dur) {
+        var outEl = active
+        var inEl  = active === slotA ? slotB : slotA
+        var ease  = dur < 130 ? 'linear'
+                  : dur < 320 ? 'ease-in-out'
+                  : 'cubic-bezier(0.22,1,0.36,1)'   /* spring no pouso final */
+
+        inEl.src              = src
+        inEl.style.transition = 'none'
+        inEl.style.transform  = 'translateY(-' + sz + 'px)'
+        await sleep(16)                              /* flush repaint */
+
+        outEl.style.transition = 'transform ' + dur + 'ms ' + ease
+        outEl.style.transform  = 'translateY(' + sz + 'px)'
+        inEl.style.transition  = 'transform ' + dur + 'ms ' + ease
+        inEl.style.transform   = 'translateY(0)'
+
+        await sleep(dur)
+        active = inEl
       }
 
-      setInterval(cycle, 4400)
+      async function spin () {
+        if (spinning) return
+        spinning = true
+
+        /* destino aleatório */
+        var finalIdx = Math.floor(Math.random() * REEL.length)
+        var pos      = (reelPos + 1) % REEL.length
+        var steps    = []
+
+        /* fase rápida  — 6 quadros × 75ms */
+        for (var i = 0; i < 6; i++) { steps.push({ src: REEL[pos], dur: 75  }); pos = (pos + 1) % REEL.length }
+        /* fase média   — 3 quadros × 150ms */
+        for (var i = 0; i < 3; i++) { steps.push({ src: REEL[pos], dur: 150 }); pos = (pos + 1) % REEL.length }
+        /* fase lenta   — 2 quadros × 320ms */
+        for (var i = 0; i < 2; i++) { steps.push({ src: REEL[pos], dur: 320 }); pos = (pos + 1) % REEL.length }
+        /* pouso spring — frame aleatório com easing elástico */
+        steps.push({ src: REEL[finalIdx], dur: 660 })
+
+        setFrame(true)
+        await sleep(90)
+
+        for (var s = 0; s < steps.length; s++) {
+          await showStep(steps[s].src, steps[s].dur)
+          if (steps[s].dur < 130) await sleep(10)   /* micro-pausa no trecho rápido */
+        }
+
+        reelPos  = finalIdx
+        await sleep(180)
+        setFrame(false)
+        spinning = false
+      }
+
+      /* primeira rolada após 2s; repete a cada 5.5s */
+      setTimeout(function () { spin(); setInterval(spin, 5500) }, 2000)
     })()
 
 
