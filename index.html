@@ -259,6 +259,8 @@
         A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?
       </h1>
 
+      <h2 id="hero-h2" style="font-size:15px;font-weight:500;color:#9CA3AF;margin:0 0 16px;text-align:center;letter-spacing:0.01em;width:100%;">Como esta análise pode te ajudar</h2>
+
       <!-- hero cards -->
       <div id="hero-cards-row" style="display:flex;gap:10px;width:100%;">
 
@@ -487,6 +489,7 @@
       pt: {
         h1: 'A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?',
         hero_desc: 'Descubra em minutos se os fornecedores expõem sua empresa a perda de créditos, bloqueios no split payment e riscos fiscais invisíveis.',
+        hero_h2: 'Como esta análise pode te ajudar',
         hc1t:'Perda de créditos', hc1d:'CBS e IBS não aproveitados por fornecedores inaptos',
         hc2t:'Bloqueios no split', hc2d:'Repasse automático travado por fornecedores irregulares',
         hc3t:'Riscos invisíveis',  hc3d:'Passivos fiscais ocultos que só surgem na auditoria',
@@ -527,6 +530,7 @@
       en: {
         h1: 'The Tax Reform has arrived<br>Is your supply chain ready?',
         hero_desc: 'Discover in minutes whether your suppliers expose your company to credit losses, split payment blocks, and invisible tax risks.',
+        hero_h2: 'How this analysis can help you',
         hc1t:'Credit losses',       hc1d:'CBS and IBS blocked by non-compliant suppliers',
         hc2t:'Split payment blocks',hc2d:'Automated tax transfers frozen mid-chain',
         hc3t:'Invisible risks',     hc3d:'Hidden fiscal liabilities only found in audits',
@@ -567,6 +571,7 @@
       es: {
         h1: 'La Reforma Tributaria llegó<br>¿Tu cadena de proveedores está lista?',
         hero_desc: 'Descubre en minutos si tus proveedores exponen a tu empresa a pérdida de créditos, bloqueos en el split payment y riesgos fiscales invisibles.',
+        hero_h2: 'Cómo este análisis puede ayudarte',
         hc1t:'Pérdida de créditos', hc1d:'CBS e IBS bloqueados por proveedores no aptos',
         hc2t:'Bloqueos en el split', hc2d:'Reparto automático frenado por irregulares en la cadena',
         hc3t:'Riesgos invisibles',   hc3d:'Pasivos fiscales ocultos que afloran en la auditoría',
@@ -636,6 +641,7 @@
         btn.classList.toggle('active', btn.getAttribute('data-lang') === l)
       })
       document.getElementById('hero-h1').innerHTML = t.h1
+      document.getElementById('hero-h2').textContent = t.hero_h2
       document.getElementById('hc1t').textContent = t.hc1t
       document.getElementById('hc1d').textContent = t.hc1d
       document.getElementById('hc2t').textContent = t.hc2t
