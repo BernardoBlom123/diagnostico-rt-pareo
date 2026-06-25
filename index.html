@@ -144,8 +144,9 @@
       .av-photo    { width: 72px !important; height: 72px !important; }
       #frame-svg   { width: 72px !important; height: 72px !important; }
 
-      #hero-h1   { font-size: 24px !important; letter-spacing: -0.2px !important; line-height: 1.2 !important; margin-bottom: 12px !important; }
-      #hero-desc { font-size: 13px !important; margin-bottom: 24px !important; max-width: 100% !important; }
+      #hero-h1        { font-size: 24px !important; letter-spacing: -0.2px !important; line-height: 1.2 !important; margin-bottom: 12px !important; }
+      #hero-content   { width: 100% !important; margin-bottom: 28px !important; }
+      #hero-cards-row { flex-direction: column !important; gap: 8px !important; }
 
       #quiz-title    { font-size: 20px !important; margin-bottom: 16px !important; }
       #quiz-question { font-size: 14px !important; margin-bottom: 28px !important; }
@@ -251,12 +252,15 @@
         <div id="photo-clip" style="position:absolute;inset:0;clip-path:circle(45px at 50% 50%);overflow:hidden;"></div>
       </div>
 
-      <h1 id="hero-h1" style="font-size:52px;line-height:1.12;letter-spacing:-0.5px;margin-bottom:20px;font-weight:400;color:#3D425D;">
+      <!-- wrapper: alinha h1 e cards na mesma largura -->
+      <div id="hero-content" style="display:flex;flex-direction:column;width:fit-content;max-width:100%;margin:0 auto 48px;">
+
+      <h1 id="hero-h1" style="font-size:52px;line-height:1.12;letter-spacing:-0.5px;margin-bottom:20px;font-weight:400;color:#3D425D;text-align:center;width:100%;">
         A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?
       </h1>
 
       <!-- hero cards -->
-      <div style="display:flex;gap:10px;max-width:580px;width:100%;margin-bottom:48px;">
+      <div id="hero-cards-row" style="display:flex;gap:10px;width:100%;">
 
         <div class="hero-card">
           <div class="hc-icon" style="background:rgba(229,57,53,0.08);">
@@ -282,7 +286,8 @@
           <p id="hc3d">Passivos fiscais ocultos que só surgem na auditoria</p>
         </div>
 
-      </div>
+      </div><!-- /hero-cards-row -->
+      </div><!-- /hero-content -->
 
       <button id="cta-analyze" onclick="startQuiz()"
         style="color:#fff;"
