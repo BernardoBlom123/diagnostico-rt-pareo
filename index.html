@@ -48,25 +48,45 @@
     .view.active { opacity: 1; }
 
     /* ── Formulário de captura ── */
-    .hs-card{background:#fff;border:1px solid #d8d8d2;border-radius:12px;padding:2rem;margin-top:8px;}
+    .hs-card{background:#fff;border:1px solid #d8d8d2;border-radius:12px;padding:1.5rem;margin-top:4px;}
     .hs-titulo{font-size:18px;margin:0 0 4px;font-weight:600;color:#0F1D4B;}
-    .hs-sub{font-size:13px;color:#5F5E5A;margin:0 0 1.5rem;}
+    .hs-sub{font-size:13px;color:#5F5E5A;margin:0 0 1rem;}
     .hs-card label{font-size:13px;color:#5F5E5A;display:block;margin-bottom:4px;font-weight:500;}
     .hs-card input,.hs-card select{width:100%;height:40px;padding:0 12px;border:1px solid #d8d8d2;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;transition:border-color .15s;box-sizing:border-box;}
     .hs-card input:focus,.hs-card select:focus{outline:none;border-color:#00D9BD;}
     .hs-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .hs-field{margin-bottom:12px;}
-    .hs-privacy{font-size:12px;color:#5F5E5A;margin:8px 0 16px;line-height:1.5;}
-    .hs-privacy a{color:#0F1D4B;}
+    .hs-field{margin-bottom:8px;}
+    .hs-terms-field{display:flex;align-items:flex-start;gap:8px;margin:6px 0 10px;}
+    .hs-terms-field input[type="checkbox"]{width:15px;height:15px;margin-top:2px;flex-shrink:0;accent-color:#0F1D4B;cursor:pointer;}
+    .hs-terms-field label{font-size:12px;color:#5F5E5A;line-height:1.5;cursor:pointer;margin:0;font-weight:400;}
+    .hs-terms-field a{color:#0F1D4B;text-decoration:underline;}
     .hs-btn-enviar{width:100%;background:#0F1D4B;color:#fff;border:none;border-radius:8px;cursor:pointer;padding:12px;font-family:inherit;font-weight:600;font-size:15px;transition:opacity .15s;}
     .hs-btn-enviar:disabled{opacity:.5;cursor:not-allowed;}
     .hs-btn-enviar:active{transform:scale(.99);}
-    #hs-status{font-size:13px;min-height:18px;margin-top:10px;}
-    .hs-scoring-box{border-top:1px solid #d8d8d2;margin-top:20px;padding-top:16px;}
+    #hs-status{font-size:13px;min-height:18px;margin-top:8px;}
+    .hs-scoring-box{border-top:1px solid #d8d8d2;margin-top:14px;padding-top:12px;}
     .hs-scoring-hint{font-size:12px;color:#5F5E5A;margin:0 0 8px;}
     .hs-btn-scoring{width:100%;background:#00D9BD;color:#0F1D4B;border:none;border-radius:8px;cursor:not-allowed;padding:12px;font-family:inherit;font-weight:600;font-size:15px;opacity:.4;transition:opacity .15s;}
     .hs-btn-scoring.ativo{opacity:1;cursor:pointer;}
     @media(max-width:480px){.hs-row{grid-template-columns:1fr;}}
+
+    /* ── Formulário sem scroll em notebooks ── */
+    @media(max-height:820px){
+      #view-form>main{padding-top:4px!important;padding-bottom:4px!important;}
+      #view-form footer{padding-top:8px!important;padding-bottom:12px!important;}
+      .hs-card{padding:1rem;margin-top:0;}
+      .hs-titulo{font-size:15px;}
+      .hs-sub{font-size:11px;margin-bottom:.65rem;}
+      .hs-card label{font-size:11px;margin-bottom:2px;}
+      .hs-card input,.hs-card select{height:33px;font-size:13px;}
+      .hs-field{margin-bottom:5px;}
+      .hs-scoring-box{margin-top:8px;padding-top:8px;}
+      .hs-scoring-hint{font-size:11px;margin-bottom:4px;}
+      .hs-btn-enviar,.hs-btn-scoring{padding:7px;font-size:13px;}
+      #hs-status{margin-top:4px;min-height:12px;font-size:11px;}
+      .hs-terms-field{margin:4px 0 6px;}
+      .hs-terms-field label{font-size:11px;}
+    }
 
     .ans-btn {
       padding: 12px 24px;
@@ -311,7 +331,7 @@
 
         <div class="hs-card">
           <h1 class="hs-titulo">Diagnóstico Reforma Tributária</h1>
-          <p class="hs-sub">Preencha seus dados para liberar seu scoring.</p>
+          <p class="hs-sub">Preencha seus dados para liberar sua Análise de impacto.</p>
 
           <div id="hsForm">
             <div class="hs-field">
@@ -354,10 +374,6 @@
                 <option>Logística e Transporte</option>
               </select>
             </div>
-            <p class="hs-privacy">
-              Ao informar meus dados, estou ciente de que o tratamento dos dados pessoais
-              ocorrerá conforme a <a href="#" target="_blank" rel="noopener">política de privacidade</a>.
-            </p>
             <div class="hs-field">
               <label for="f_regime">Regime fiscal *</label>
               <select id="f_regime">
@@ -368,13 +384,17 @@
                 <option>Outros</option>
               </select>
             </div>
+            <div class="hs-terms-field">
+              <input type="checkbox" id="f_termos" />
+              <label for="f_termos">Li e concordo com os <a href="termos.html" target="_blank" rel="noopener">termos de uso</a> e autorizo o tratamento dos meus dados conforme a LGPD.</label>
+            </div>
             <button type="button" id="btnEnviar" class="hs-btn-enviar">Enviar</button>
             <div id="hs-status"></div>
           </div>
 
           <div class="hs-scoring-box">
-            <p class="hs-scoring-hint">Seu scoring será liberado após o envio dos dados.</p>
-            <button type="button" id="btnScoring" class="hs-btn-scoring" disabled>Ver análise</button>
+            <p class="hs-scoring-hint">Sua Análise de impacto será liberada após o envio dos dados.</p>
+            <button type="button" id="btnScoring" class="hs-btn-scoring" disabled><span id="form-cta-text">Ver Análise de impacto</span></button>
           </div>
         </div>
 
@@ -454,7 +474,7 @@
         counter_sep: ' de ',
         form_title: 'Quase lá!',
         form_desc: 'Preencha os dados abaixo para liberar o impacto fiscal da sua cadeia.',
-        form_cta: 'Ver Impacto',
+        form_cta: 'Ver Análise de impacto',
       },
       en: {
         nav_specialist: 'Talk to a specialist',
@@ -473,7 +493,7 @@
         counter_sep: ' of ',
         form_title: 'Almost there!',
         form_desc: 'Fill in the details below to unlock your supply chain\'s fiscal impact.',
-        form_cta: 'See Impact',
+        form_cta: 'See Impact Analysis',
       },
       es: {
         nav_specialist: 'Habla con un especialista',
@@ -492,7 +512,7 @@
         counter_sep: ' de ',
         form_title: '¡Casi listo!',
         form_desc: 'Complete los datos a continuación para ver el impacto fiscal de su cadena.',
-        form_cta: 'Ver Impacto',
+        form_cta: 'Ver Análisis de impacto',
       }
     }
 
@@ -862,6 +882,9 @@
       }
       if (!validarEmail(dados.email)) {
         setStatus("Email inválido.", "#A32D2D"); return;
+      }
+      if (!document.getElementById("f_termos").checked) {
+        setStatus("Aceite os termos de uso para continuar.", "#A32D2D"); return;
       }
 
       setStatus("Enviando...");

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Termos de Uso — Páreo by CLA Brasil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Museo Sans';
+      src: local('Museo Sans 300'), local('MuseoSans-300'), local('Museo Sans');
+      font-weight: 300;
+    }
+    @font-face {
+      font-family: 'Museo Sans';
+      src: local('Museo Sans 500'), local('MuseoSans-500'), local('Museo Sans');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Museo Sans';
+      src: local('Museo Sans 700'), local('MuseoSans-700'), local('Museo Sans');
+      font-weight: 700;
+    }
+    * { -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Museo Sans', sans-serif; background: #f9fafb; color: #374151; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0F1D4B;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .back-btn:hover { background: #1a2e6b; transform: translateX(-2px); }
+    .back-btn:active { transform: translateX(0); }
+
+    .prose h2 { font-size: 16px; font-weight: 700; color: #0F1D4B; margin: 28px 0 10px; }
+    .prose h2:first-child { margin-top: 0; }
+    .prose p { font-size: 14px; line-height: 1.75; color: #4B5563; margin: 0 0 10px; }
+    .prose ul { margin: 6px 0 12px 18px; padding: 0; list-style: disc; }
+    .prose ul li { font-size: 14px; line-height: 1.75; color: #4B5563; margin-bottom: 4px; }
+    .prose a { color: #0F1D4B; text-decoration: underline; }
+    .badge { display: inline-block; background: #e8f9f6; color: #0a6e5f; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; margin-left: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header style="background:#fff;border-bottom:1px solid #e5e7eb;">
+    <div style="max-width:720px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;">
+      <img src="links/header-logo.svg" alt="CLA Brasil" style="height:36px;" />
+      <button class="back-btn" onclick="fecharOuVoltar()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8L10 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Voltar ao diagnóstico
+      </button>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <main style="max-width:720px;margin:0 auto;padding:40px 24px 80px;">
+
+    <!-- Botão de voltar também no topo do conteúdo para visibilidade máxima -->
+    <div style="margin-bottom:32px;">
+      <button class="back-btn" onclick="fecharOuVoltar()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8L10 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Voltar ao diagnóstico
+      </button>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:36px 40px;">
+
+      <div style="margin-bottom:28px;">
+        <h1 style="font-size:22px;font-weight:700;color:#0F1D4B;margin:0 0 6px;">Termos de Uso e Privacidade <span class="badge">LGPD</span></h1>
+        <p style="font-size:13px;color:#9CA3AF;margin:0;">Aplicação: Diagnóstico RT — Páreo by CLA Brasil · Versão 1.0 · Junho/2026</p>
+      </div>
+
+      <div class="prose">
+
+        <h2>1. Quem somos</h2>
+        <p>
+          A <strong>CLA Brasil</strong> é a controladora responsável pelo tratamento dos dados pessoais coletados nesta aplicação. Esta ferramenta foi desenvolvida para ajudar empresas a entenderem seu nível de preparação para a Reforma Tributária brasileira.
+        </p>
+        <p>Contato do responsável pela privacidade: <a href="mailto:lgpd@clabrasil.com.br">lgpd@clabrasil.com.br</a></p>
+
+        <h2>2. Dados que coletamos</h2>
+        <p>Ao preencher o formulário de diagnóstico, coletamos:</p>
+        <ul>
+          <li>Nome completo</li>
+          <li>Endereço de e-mail</li>
+          <li>Número de telefone</li>
+          <li>Cargo profissional</li>
+          <li>Nome e segmento da empresa</li>
+          <li>Regime fiscal da empresa</li>
+          <li>Respostas ao questionário de diagnóstico (não vinculadas a dados pessoais identificáveis de terceiros)</li>
+        </ul>
+
+        <h2>3. Para que usamos seus dados</h2>
+        <p>Seus dados são utilizados exclusivamente para:</p>
+        <ul>
+          <li>Gerar e entregar sua <strong>Análise de impacto da Reforma Tributária</strong></li>
+          <li>Entrar em contato para apresentar soluções e serviços personalizados da CLA Brasil</li>
+          <li>Aprimorar nossos diagnósticos, produtos e serviços</li>
+        </ul>
+        <p>Não utilizamos seus dados para fins de publicidade de terceiros, nem os vendemos ou cedemos a empresas sem relação com as finalidades acima.</p>
+
+        <h2>4. Base legal (LGPD — Lei nº 13.709/2018)</h2>
+        <p>O tratamento dos seus dados pessoais é realizado com base nas seguintes hipóteses legais previstas no Art. 7º da LGPD:</p>
+        <ul>
+          <li><strong>Consentimento (inciso I):</strong> ao marcar o aceite neste formulário, você autoriza expressamente o tratamento dos dados informados.</li>
+          <li><strong>Legítimo interesse (inciso IX):</strong> para fins de melhoria dos nossos serviços de diagnóstico e relacionamento com clientes, sempre com respeito aos seus direitos.</li>
+        </ul>
+
+        <h2>5. Compartilhamento de dados</h2>
+        <p>Seus dados podem ser compartilhados com os seguintes parceiros, que atuam como <strong>operadores de dados</strong> em nome da CLA Brasil:</p>
+        <ul>
+          <li><strong>HubSpot, Inc.:</strong> plataforma de CRM utilizada para gestão de relacionamento e envio de comunicações.</li>
+          <li><strong>Consultores e especialistas da CLA Brasil</strong> diretamente envolvidos no atendimento ao seu diagnóstico.</li>
+        </ul>
+        <p>Todos os parceiros estão sujeitos a obrigações de confidencialidade e são proibidos de usar seus dados para fins próprios.</p>
+
+        <h2>6. Por quanto tempo guardamos seus dados</h2>
+        <p>
+          Mantemos seus dados pelo tempo necessário para cumprir as finalidades descritas neste documento ou conforme exigido por lei. Após esse período, os dados são anonimizados ou excluídos de forma segura. Você pode solicitar a exclusão dos seus dados a qualquer momento.
+        </p>
+
+        <h2>7. Seus direitos como titular</h2>
+        <p>Nos termos da LGPD, você tem direito a:</p>
+        <ul>
+          <li>Confirmar a existência do tratamento dos seus dados</li>
+          <li>Acessar os dados que temos sobre você</li>
+          <li>Corrigir dados incompletos, inexatos ou desatualizados</li>
+          <li>Solicitar a anonimização, bloqueio ou eliminação dos dados</li>
+          <li>Solicitar a portabilidade dos dados</li>
+          <li>Revogar seu consentimento a qualquer momento, sem prejuízo à legalidade do tratamento anterior</li>
+          <li>Apresentar reclamação à ANPD (Autoridade Nacional de Proteção de Dados)</li>
+        </ul>
+        <p>Para exercer qualquer desses direitos, entre em contato pelo e-mail: <a href="mailto:lgpd@clabrasil.com.br">lgpd@clabrasil.com.br</a></p>
+
+        <h2>8. Segurança</h2>
+        <p>
+          Adotamos medidas técnicas e organizacionais adequadas para proteger seus dados contra acesso não autorizado, alteração, divulgação ou destruição. A transmissão de dados é protegida por criptografia (HTTPS/TLS).
+        </p>
+
+        <h2>9. Cookies e rastreamento</h2>
+        <p>
+          Esta aplicação utiliza o pixel de rastreamento do HubSpot para identificar visitantes e personalizar a comunicação. Você pode desativar cookies de terceiros nas configurações do seu navegador.
+        </p>
+
+        <h2>10. Alterações nestes termos</h2>
+        <p>
+          Podemos atualizar este documento periodicamente. A versão mais recente estará sempre disponível nesta página, com a data de revisão indicada no cabeçalho.
+        </p>
+
+        <h2>11. Contato</h2>
+        <p>
+          Dúvidas, solicitações ou exercício de direitos: <a href="mailto:lgpd@clabrasil.com.br">lgpd@clabrasil.com.br</a><br>
+          CLA Brasil — São Paulo, SP, Brasil
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Botão de voltar no final da página -->
+    <div style="margin-top:32px;text-align:center;">
+      <button class="back-btn" style="font-size:16px;padding:14px 28px;" onclick="fecharOuVoltar()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8L10 13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Voltar ao diagnóstico
+      </button>
+    </div>
+
+  </main>
+
+  <footer style="text-align:center;padding:24px;border-top:1px solid #e5e7eb;background:#fff;">
+    <p style="font-size:12px;color:#9CA3AF;">© 2026 CLA Brasil — todos os direitos reservados</p>
+  </footer>
+
+  <script>
+    function fecharOuVoltar() {
+      if (window.history.length > 1) {
+        history.back();
+      } else {
+        window.close();
+      }
+    }
+  </script>
+</body>
+</html>
