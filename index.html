@@ -330,70 +330,70 @@
       <div id="form-container" style="width:100%;max-width:520px;">
 
         <div class="hs-card">
-          <h1 class="hs-titulo">Diagnóstico Reforma Tributária</h1>
-          <p class="hs-sub">Preencha seus dados para liberar sua Análise de impacto.</p>
+          <h1 class="hs-titulo" id="form-title">Diagnóstico Reforma Tributária</h1>
+          <p class="hs-sub" id="form-desc">Preencha seus dados para liberar sua Análise de impacto.</p>
 
           <div id="hsForm">
             <div class="hs-field">
-              <label for="f_nome">Nome completo *</label>
+              <label id="form-label-nome" for="f_nome">Nome completo *</label>
               <input id="f_nome" type="text" autocomplete="name" />
             </div>
             <div class="hs-row">
               <div class="hs-field">
-                <label for="f_tel">Telefone *</label>
+                <label id="form-label-tel" for="f_tel">Telefone *</label>
                 <input id="f_tel" type="tel" autocomplete="tel" placeholder="+55 12 99999-9999" />
               </div>
               <div class="hs-field">
-                <label for="f_email">Email *</label>
+                <label id="form-label-email" for="f_email">Email *</label>
                 <input id="f_email" type="email" autocomplete="email" />
               </div>
             </div>
             <div class="hs-row">
               <div class="hs-field">
-                <label for="f_cargo">Cargo *</label>
+                <label id="form-label-cargo" for="f_cargo">Cargo *</label>
                 <input id="f_cargo" type="text" autocomplete="organization-title" />
               </div>
               <div class="hs-field">
-                <label for="f_empresa">Nome da empresa *</label>
+                <label id="form-label-empresa" for="f_empresa">Nome da empresa *</label>
                 <input id="f_empresa" type="text" autocomplete="organization" />
               </div>
             </div>
             <div class="hs-field">
-              <label for="f_segmento">Segmento da empresa *</label>
+              <label id="form-label-segmento" for="f_segmento">Segmento da empresa *</label>
               <select id="f_segmento">
                 <option value="">Selecione...</option>
-                <option>Tecnologia e Software</option>
-                <option>Saúde</option>
-                <option>Educação</option>
-                <option>Comércio (varejo/atacado)</option>
-                <option>Serviços Financeiros</option>
-                <option>Manufatura</option>
-                <option>Construção e Imobiliário</option>
-                <option>Alimentação e Bebidas</option>
-                <option>Agronegócio</option>
-                <option>Logística e Transporte</option>
+                <option value="Tecnologia e Software">Tecnologia e Software</option>
+                <option value="Saúde">Saúde</option>
+                <option value="Educação">Educação</option>
+                <option value="Comércio (varejo/atacado)">Comércio (varejo/atacado)</option>
+                <option value="Serviços Financeiros">Serviços Financeiros</option>
+                <option value="Manufatura">Manufatura</option>
+                <option value="Construção e Imobiliário">Construção e Imobiliário</option>
+                <option value="Alimentação e Bebidas">Alimentação e Bebidas</option>
+                <option value="Agronegócio">Agronegócio</option>
+                <option value="Logística e Transporte">Logística e Transporte</option>
               </select>
             </div>
             <div class="hs-field">
-              <label for="f_regime">Regime fiscal *</label>
+              <label id="form-label-regime" for="f_regime">Regime fiscal *</label>
               <select id="f_regime">
                 <option value="">Selecione...</option>
-                <option>Lucro Presumido</option>
-                <option>Lucro Real</option>
-                <option>Simples Nacional</option>
-                <option>Outros</option>
+                <option value="Lucro Presumido">Lucro Presumido</option>
+                <option value="Lucro Real">Lucro Real</option>
+                <option value="Simples Nacional">Simples Nacional</option>
+                <option value="Outros">Outros</option>
               </select>
             </div>
             <div class="hs-terms-field">
               <input type="checkbox" id="f_termos" />
-              <label for="f_termos">Li e concordo com os <a href="termos.html" target="_blank" rel="noopener">termos de uso</a> e autorizo o tratamento dos meus dados conforme a LGPD.</label>
+              <label for="f_termos"><span id="form-terms-pre">Li e concordo com os </span><a id="form-terms-link" href="termos.html" target="_blank" rel="noopener">termos de uso</a><span id="form-terms-post"> e autorizo o tratamento dos meus dados conforme a LGPD.</span></label>
             </div>
             <button type="button" id="btnEnviar" class="hs-btn-enviar">Enviar</button>
             <div id="hs-status"></div>
           </div>
 
           <div class="hs-scoring-box">
-            <p class="hs-scoring-hint">Sua Análise de impacto será liberada após o envio dos dados.</p>
+            <p id="form-scoring-hint" class="hs-scoring-hint">Sua Análise de impacto será liberada após o envio dos dados.</p>
             <button type="button" id="btnScoring" class="hs-btn-scoring" disabled><span id="form-cta-text">Ver Análise de impacto</span></button>
           </div>
         </div>
@@ -475,6 +475,27 @@
         form_title: 'Quase lá!',
         form_desc: 'Preencha os dados abaixo para liberar o impacto fiscal da sua cadeia.',
         form_cta: 'Ver Análise de impacto',
+        form_label_nome: 'Nome completo *',
+        form_label_tel: 'Telefone *',
+        form_label_email: 'Email *',
+        form_label_cargo: 'Cargo *',
+        form_label_empresa: 'Nome da empresa *',
+        form_label_segmento: 'Segmento da empresa *',
+        form_label_regime: 'Regime fiscal *',
+        form_ph_tel: '+55 12 99999-9999',
+        form_sel_default: 'Selecione...',
+        form_segmento_opts: ['Tecnologia e Software','Saúde','Educação','Comércio (varejo/atacado)','Serviços Financeiros','Manufatura','Construção e Imobiliário','Alimentação e Bebidas','Agronegócio','Logística e Transporte'],
+        form_regime_opts: ['Lucro Presumido','Lucro Real','Simples Nacional','Outros'],
+        form_btn_enviar: 'Enviar',
+        form_terms: ['Li e concordo com os ', 'termos de uso', ' e autorizo o tratamento dos meus dados conforme a LGPD.'],
+        form_scoring_hint: 'Sua Análise de impacto será liberada após o envio dos dados.',
+        val_required: 'Preencha todos os campos obrigatórios.',
+        val_email: 'Email inválido.',
+        val_terms: 'Aceite os termos de uso para continuar.',
+        val_sending: 'Enviando...',
+        val_success: '✓ Dados enviados com sucesso.',
+        val_error_prefix: 'Erro: ',
+        val_network: 'Falha de rede. Tente novamente.',
       },
       en: {
         nav_specialist: 'Talk to a specialist',
@@ -494,6 +515,27 @@
         form_title: 'Almost there!',
         form_desc: 'Fill in the details below to unlock your supply chain\'s fiscal impact.',
         form_cta: 'See Impact Analysis',
+        form_label_nome: 'Full name *',
+        form_label_tel: 'Phone *',
+        form_label_email: 'Email *',
+        form_label_cargo: 'Job title *',
+        form_label_empresa: 'Company name *',
+        form_label_segmento: 'Industry *',
+        form_label_regime: 'Tax regime *',
+        form_ph_tel: '+55 12 99999-9999',
+        form_sel_default: 'Select...',
+        form_segmento_opts: ['Technology & Software','Healthcare','Education','Retail & Wholesale','Financial Services','Manufacturing','Construction & Real Estate','Food & Beverage','Agribusiness','Logistics & Transportation'],
+        form_regime_opts: ['Presumed Profit','Real Profit','Simples Nacional','Other'],
+        form_btn_enviar: 'Submit',
+        form_terms: ['I have read and agree to the ', 'terms of use', ', and authorize the processing of my data under the LGPD.'],
+        form_scoring_hint: 'Your Impact Analysis will be released after data submission.',
+        val_required: 'Please fill in all required fields.',
+        val_email: 'Invalid email.',
+        val_terms: 'Please accept the terms of use to continue.',
+        val_sending: 'Submitting...',
+        val_success: '✓ Data submitted successfully.',
+        val_error_prefix: 'Error: ',
+        val_network: 'Network error. Please try again.',
       },
       es: {
         nav_specialist: 'Habla con un especialista',
@@ -513,6 +555,27 @@
         form_title: '¡Casi listo!',
         form_desc: 'Complete los datos a continuación para ver el impacto fiscal de su cadena.',
         form_cta: 'Ver Análisis de impacto',
+        form_label_nome: 'Nombre completo *',
+        form_label_tel: 'Teléfono *',
+        form_label_email: 'Email *',
+        form_label_cargo: 'Cargo *',
+        form_label_empresa: 'Nombre de la empresa *',
+        form_label_segmento: 'Segmento de la empresa *',
+        form_label_regime: 'Régimen fiscal *',
+        form_ph_tel: '+55 12 99999-9999',
+        form_sel_default: 'Seleccione...',
+        form_segmento_opts: ['Tecnología y Software','Salud','Educación','Comercio (minorista/mayorista)','Servicios Financieros','Manufactura','Construcción e Inmobiliario','Alimentación y Bebidas','Agronegocios','Logística y Transporte'],
+        form_regime_opts: ['Lucro Presumido','Lucro Real','Simples Nacional','Otros'],
+        form_btn_enviar: 'Enviar',
+        form_terms: ['Leí y acepto los ', 'términos de uso', ', y autorizo el tratamiento de mis datos conforme a la LGPD.'],
+        form_scoring_hint: 'Su Análisis de impacto será publicado tras el envío de datos.',
+        val_required: 'Complete todos los campos obligatorios.',
+        val_email: 'Email inválido.',
+        val_terms: 'Acepte los términos de uso para continuar.',
+        val_sending: 'Enviando...',
+        val_success: '✓ Datos enviados con éxito.',
+        val_error_prefix: 'Error: ',
+        val_network: 'Error de red. Inténtelo de nuevo.',
       }
     }
 
@@ -562,6 +625,24 @@
       document.getElementById('form-title').textContent = t.form_title
       document.getElementById('form-desc').textContent = t.form_desc
       document.getElementById('form-cta-text').textContent = t.form_cta
+      /* ── Formulário de captura ── */
+      document.getElementById('form-label-nome').textContent    = t.form_label_nome
+      document.getElementById('form-label-tel').textContent     = t.form_label_tel
+      document.getElementById('form-label-email').textContent   = t.form_label_email
+      document.getElementById('form-label-cargo').textContent   = t.form_label_cargo
+      document.getElementById('form-label-empresa').textContent = t.form_label_empresa
+      document.getElementById('form-label-segmento').textContent= t.form_label_segmento
+      document.getElementById('form-label-regime').textContent  = t.form_label_regime
+      document.getElementById('f_tel').placeholder              = t.form_ph_tel
+      document.querySelector('#f_segmento option[value=""]').textContent = t.form_sel_default
+      document.querySelector('#f_regime option[value=""]').textContent   = t.form_sel_default
+      document.querySelectorAll('#f_segmento option:not([value=""])').forEach(function(o,i){ o.textContent = t.form_segmento_opts[i] })
+      document.querySelectorAll('#f_regime option:not([value=""])').forEach(function(o,i){ o.textContent  = t.form_regime_opts[i]   })
+      document.getElementById('form-terms-pre').textContent     = t.form_terms[0]
+      document.getElementById('form-terms-link').textContent    = t.form_terms[1]
+      document.getElementById('form-terms-post').textContent    = t.form_terms[2]
+      document.getElementById('btnEnviar').textContent          = t.form_btn_enviar
+      document.getElementById('form-scoring-hint').textContent  = t.form_scoring_hint
       if (document.getElementById('view-quiz').classList.contains('active')) renderQuestion(qIndex)
       if (document.getElementById('view-result').classList.contains('active')) showResults()
     }
@@ -878,16 +959,16 @@
 
       if (!dados.nome || !dados.tel || !dados.email || !dados.cargo ||
           !dados.empresa || !dados.segmento || !dados.regime) {
-        setStatus("Preencha todos os campos obrigatórios.", "#A32D2D"); return;
+        setStatus(T[lang].val_required, "#A32D2D"); return;
       }
       if (!validarEmail(dados.email)) {
-        setStatus("Email inválido.", "#A32D2D"); return;
+        setStatus(T[lang].val_email, "#A32D2D"); return;
       }
       if (!document.getElementById("f_termos").checked) {
-        setStatus("Aceite os termos de uso para continuar.", "#A32D2D"); return;
+        setStatus(T[lang].val_terms, "#A32D2D"); return;
       }
 
-      setStatus("Enviando...");
+      setStatus(T[lang].val_sending);
       this.disabled = true;
 
       var ctx = { pageUri: location.href, pageName: document.title };
@@ -912,17 +993,17 @@
         var res  = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         var data = await res.json();
         if (res.ok) {
-          setStatus("✓ Dados enviados com sucesso.", "#0F6E56");
+          setStatus(T[lang].val_success, "#0F6E56");
           var btn = document.getElementById("btnScoring");
           btn.disabled = false;
           btn.classList.add("ativo");
         } else {
           var msg = data.message || (data.errors && JSON.stringify(data.errors)) || "Erro no envio.";
-          setStatus("Erro: " + msg, "#A32D2D");
+          setStatus(T[lang].val_error_prefix + msg, "#A32D2D");
           document.getElementById("btnEnviar").disabled = false;
         }
       } catch (err) {
-        setStatus("Falha de rede. Tente novamente.", "#A32D2D");
+        setStatus(T[lang].val_network, "#A32D2D");
         document.getElementById("btnEnviar").disabled = false;
       }
     });
