@@ -207,10 +207,47 @@
         A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?
       </h1>
 
-      <p id="hero-desc" style="color:#9CA3AF;font-size:25px;font-weight:300;max-width:480px;margin-bottom:48px;line-height:1.6;">
-        Descubra em minutos se os fornecedores expõem sua empresa a perda de
-        créditos, bloqueios no split payment e riscos fiscais invisíveis.
-      </p>
+      <!-- hero cards -->
+      <div style="display:flex;gap:10px;max-width:560px;width:100%;margin-bottom:48px;">
+
+        <div style="flex:1;background:#fff;border:1px solid #E9EAF0;border-radius:14px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;">
+          <div style="width:34px;height:34px;border-radius:9px;background:#FEF3F0;display:flex;align-items:center;justify-content:center;margin-bottom:9px;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="1,4.5 5.5,10 8.5,6.5 15,13.5"/>
+              <polyline points="11,13.5 15,13.5 15,9.5"/>
+            </svg>
+          </div>
+          <p id="hc1t" style="font-size:12px;font-weight:700;color:#3D425D;margin:0 0 4px;line-height:1.3;">Perda de créditos</p>
+          <p id="hc1d" style="font-size:11px;color:#9CA3AF;margin:0;line-height:1.5;text-align:center;">CBS e IBS não aproveitados por fornecedores inaptos</p>
+        </div>
+
+        <div style="flex:1;background:#fff;border:1px solid #E9EAF0;border-radius:14px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;">
+          <div style="width:34px;height:34px;border-radius:9px;background:#E8F9F6;display:flex;align-items:center;justify-content:center;margin-bottom:9px;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#0a7066" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 2v5"/>
+              <path d="M8 7L3.5 13"/>
+              <path d="M8 7L12.5 13"/>
+              <circle cx="3.5" cy="13.5" r="1.2" stroke="none" fill="#0a7066"/>
+              <circle cx="12.5" cy="13.5" r="1.2" stroke="none" fill="#0a7066"/>
+            </svg>
+          </div>
+          <p id="hc2t" style="font-size:12px;font-weight:700;color:#3D425D;margin:0 0 4px;line-height:1.3;">Bloqueios no split</p>
+          <p id="hc2d" style="font-size:11px;color:#9CA3AF;margin:0;line-height:1.5;text-align:center;">Repasse automático travado por fornecedores irregulares</p>
+        </div>
+
+        <div style="flex:1;background:#fff;border:1px solid #E9EAF0;border-radius:14px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;">
+          <div style="width:34px;height:34px;border-radius:9px;background:#EEF0F8;display:flex;align-items:center;justify-content:center;margin-bottom:9px;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#3D425D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 8s2.5-4.5 6-4.5S14 8 14 8s-2.5 4.5-6 4.5S2 8 2 8z"/>
+              <circle cx="8" cy="8" r="1.8"/>
+              <line x1="2.5" y1="2.5" x2="13.5" y2="13.5"/>
+            </svg>
+          </div>
+          <p id="hc3t" style="font-size:12px;font-weight:700;color:#3D425D;margin:0 0 4px;line-height:1.3;">Riscos invisíveis</p>
+          <p id="hc3d" style="font-size:11px;color:#9CA3AF;margin:0;line-height:1.5;text-align:center;">Passivos fiscais ocultos que só surgem na auditoria</p>
+        </div>
+
+      </div>
 
       <button id="cta-analyze" onclick="startQuiz()"
         style="color:#fff;"
@@ -410,6 +447,9 @@
       pt: {
         h1: 'A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?',
         hero_desc: 'Descubra em minutos se os fornecedores expõem sua empresa a perda de créditos, bloqueios no split payment e riscos fiscais invisíveis.',
+        hc1t:'Perda de créditos', hc1d:'CBS e IBS não aproveitados por fornecedores inaptos',
+        hc2t:'Bloqueios no split', hc2d:'Repasse automático travado por fornecedores irregulares',
+        hc3t:'Riscos invisíveis',  hc3d:'Passivos fiscais ocultos que só surgem na auditoria',
         cta_analyze: 'Analisar minha cadeia agora',
         footer: '© 2026 CLA Brasil — todos os direitos reservados',
         back: 'Voltar',
@@ -447,6 +487,9 @@
       en: {
         h1: 'The Tax Reform has arrived<br>Is your supply chain ready?',
         hero_desc: 'Discover in minutes whether your suppliers expose your company to credit losses, split payment blocks, and invisible tax risks.',
+        hc1t:'Credit losses',       hc1d:'CBS and IBS blocked by non-compliant suppliers',
+        hc2t:'Split payment blocks',hc2d:'Automated tax transfers frozen mid-chain',
+        hc3t:'Invisible risks',     hc3d:'Hidden fiscal liabilities only found in audits',
         cta_analyze: 'Analyze my chain now',
         footer: '© 2026 CLA Brasil — all rights reserved',
         back: 'Back',
@@ -484,6 +527,9 @@
       es: {
         h1: 'La Reforma Tributaria llegó<br>¿Tu cadena de proveedores está lista?',
         hero_desc: 'Descubre en minutos si tus proveedores exponen a tu empresa a pérdida de créditos, bloqueos en el split payment y riesgos fiscales invisibles.',
+        hc1t:'Pérdida de créditos', hc1d:'CBS e IBS bloqueados por proveedores no aptos',
+        hc2t:'Bloqueos en el split', hc2d:'Reparto automático frenado por irregulares en la cadena',
+        hc3t:'Riesgos invisibles',   hc3d:'Pasivos fiscales ocultos que afloran en la auditoría',
         cta_analyze: 'Analizar mi cadena ahora',
         footer: '© 2026 CLA Brasil — todos los derechos reservados',
         back: 'Volver',
@@ -550,7 +596,12 @@
         btn.classList.toggle('active', btn.getAttribute('data-lang') === l)
       })
       document.getElementById('hero-h1').innerHTML = t.h1
-      document.getElementById('hero-desc').textContent = t.hero_desc
+      document.getElementById('hc1t').textContent = t.hc1t
+      document.getElementById('hc1d').textContent = t.hc1d
+      document.getElementById('hc2t').textContent = t.hc2t
+      document.getElementById('hc2d').textContent = t.hc2d
+      document.getElementById('hc3t').textContent = t.hc3t
+      document.getElementById('hc3d').textContent = t.hc3d
       document.getElementById('cta-analyze-text').textContent = t.cta_analyze
       document.querySelectorAll('.footer-copy').forEach(function (el) { el.textContent = t.footer })
       document.getElementById('quiz-back-text').textContent = t.back
