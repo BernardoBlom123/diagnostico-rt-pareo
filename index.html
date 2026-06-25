@@ -816,10 +816,9 @@
 
 
     /* ══════════════════════════════════════
-       Roleta do avatar (homepage)
+       Roleta do avatar — rAF + física de fricção
     ══════════════════════════════════════ */
     ;(function () {
-      /* reel: fotos intercaladas com animation-icons e animations */
       var REEL = [
         'links/hero-icon.svg',
         'links/animation-icon.svg',
@@ -836,86 +835,104 @@
         'links/animation-06.svg',
       ]
 
+      /*
+       * Física: tira horizontal contínua com 8 cópias do reel.
+       * A velocidade inicial é calibrada para que a série geométrica
+       * v0 / (1 - FRICTION)  ==  distância até o alvo escolhido.
+       * Resultado: desaceleração exponencial real sem saltos.
+       */
+      var COPIES   = 8
+      var FRICTION = 0.972   /* 2.8 % de perda por frame a ~60 fps  →  ~3.3 s de rolagem */
+
       var clip    = document.getElementById('photo-clip')
       var corners = ['c-tl','c-bl','c-tr','c-br'].map(function (id) { return document.getElementById(id) })
       var OPEN    = ['translate(-13px,-13px)','translate(-13px,13px)','translate(13px,-13px)','translate(13px,13px)']
       var sz      = document.getElementById('avatar-wrap').offsetWidth || 120
 
-      /* dois slots em ping-pong — entrada sempre vem de cima (slot machine) */
-      var slotA = document.createElement('img')
-      var slotB = document.createElement('img')
-      var base  = 'position:absolute;top:0;left:0;width:' + sz + 'px;height:' + sz + 'px;'
-      slotA.style.cssText = base
-      slotB.style.cssText = base + 'transform:translateY(-' + sz + 'px);'
-      slotA.src = REEL[0]
-      slotB.src = REEL[1]
-      clip.appendChild(slotA)
-      clip.appendChild(slotB)
+      /* ── constrói a tira ── */
+      var strip = document.createElement('div')
+      strip.style.cssText = 'position:absolute;top:0;left:0;height:' + sz + 'px;'
+                          + 'display:flex;will-change:transform;'
+      for (var r = 0; r < COPIES; r++) {
+        REEL.forEach(function (src) {
+          var img = new Image()
+          img.src = src
+          img.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;flex-shrink:0;display:block;'
+          strip.appendChild(img)
+        })
+      }
+      clip.appendChild(strip)
 
-      var active   = slotA
-      var reelPos  = 0
-      var spinning = false
+      /* ── estado ── */
+      /* inicia mostrando REEL[0] a partir da cópia 2 — headroom à esquerda para rolar */
+      var stripX   = -(REEL.length * 2) * sz
+      var velocity = 0
+      var targetX  = stripX
+      var finalIdx = 0
+      var rafId    = null
+      var idle     = true
+
+      strip.style.transform = 'translateX(' + stripX + 'px)'
 
       function setFrame (open) {
         corners.forEach(function (c, i) { c.style.transform = open ? OPEN[i] : '' })
       }
-      function sleep (ms) { return new Promise(function (r) { setTimeout(r, ms) }) }
 
-      async function showStep (src, dur) {
-        var outEl = active
-        var inEl  = active === slotA ? slotB : slotA
-        var ease  = dur < 130 ? 'linear'
-                  : dur < 320 ? 'ease-in-out'
-                  : 'cubic-bezier(0.22,1,0.36,1)'   /* spring no pouso final */
-
-        inEl.src              = src
-        inEl.style.transition = 'none'
-        inEl.style.transform  = 'translateY(-' + sz + 'px)'
-        await sleep(16)                              /* flush repaint */
-
-        outEl.style.transition = 'transform ' + dur + 'ms ' + ease
-        outEl.style.transform  = 'translateY(' + sz + 'px)'
-        inEl.style.transition  = 'transform ' + dur + 'ms ' + ease
-        inEl.style.transform   = 'translateY(0)'
-
-        await sleep(dur)
-        active = inEl
+      /* ── fase 1: desaceleração exponencial ── */
+      function animateFrame () {
+        stripX   += velocity
+        velocity *= FRICTION
+        strip.style.transform = 'translateX(' + stripX + 'px)'
+        if (Math.abs(velocity) > 0.5) {
+          rafId = requestAnimationFrame(animateFrame)
+        } else {
+          rafId = requestAnimationFrame(settleFrame)
+        }
       }
 
-      async function spin () {
-        if (spinning) return
-        spinning = true
+      /* ── fase 2: mola suave — pousa no pixel exato ── */
+      function settleFrame () {
+        var dist = targetX - stripX
+        if (Math.abs(dist) > 0.25) {
+          stripX += dist * 0.2
+          strip.style.transform = 'translateX(' + stripX + 'px)'
+          rafId = requestAnimationFrame(settleFrame)
+        } else {
+          /* pouso concluído */
+          stripX = targetX
+          strip.style.transform = 'translateX(' + stripX + 'px)'
+          setTimeout(function () {
+            setFrame(false)
+            /* re-ancora a tira na cópia 2 para a próxima rodada ter headroom */
+            stripX = -(REEL.length * 2 + finalIdx) * sz
+            strip.style.transform = 'translateX(' + stripX + 'px)'
+            setTimeout(function () { idle = true }, 60)
+          }, 150)
+        }
+      }
 
-        /* destino aleatório */
-        var finalIdx = Math.floor(Math.random() * REEL.length)
-        var pos      = (reelPos + 1) % REEL.length
-        var steps    = []
+      /* ── disparo ── */
+      function spin () {
+        if (!idle) return
+        idle = false
+        cancelAnimationFrame(rafId)
 
-        /* fase rápida  — 6 quadros × 75ms */
-        for (var i = 0; i < 6; i++) { steps.push({ src: REEL[pos], dur: 75  }); pos = (pos + 1) % REEL.length }
-        /* fase média   — 3 quadros × 150ms */
-        for (var i = 0; i < 3; i++) { steps.push({ src: REEL[pos], dur: 150 }); pos = (pos + 1) % REEL.length }
-        /* fase lenta   — 2 quadros × 320ms */
-        for (var i = 0; i < 2; i++) { steps.push({ src: REEL[pos], dur: 320 }); pos = (pos + 1) % REEL.length }
-        /* pouso spring — frame aleatório com easing elástico */
-        steps.push({ src: REEL[finalIdx], dur: 660 })
+        finalIdx      = Math.floor(Math.random() * REEL.length)
+        var loops     = 3 + Math.floor(Math.random() * 2)          /* 3 ou 4 voltas completas */
+        targetX       = -((2 + loops) * REEL.length + finalIdx) * sz
+
+        /*
+         * v0 calibrado pela série geométrica:
+         *   Σ v0 · FRICTION^n  (n = 0..∞)  =  v0 / (1 − FRICTION)  =  |dist|
+         *   ⟹  v0 = dist · (1 − FRICTION)
+         */
+        velocity = (targetX - stripX) * (1 - FRICTION)
 
         setFrame(true)
-        await sleep(90)
-
-        for (var s = 0; s < steps.length; s++) {
-          await showStep(steps[s].src, steps[s].dur)
-          if (steps[s].dur < 130) await sleep(10)   /* micro-pausa no trecho rápido */
-        }
-
-        reelPos  = finalIdx
-        await sleep(180)
-        setFrame(false)
-        spinning = false
+        rafId = requestAnimationFrame(animateFrame)
       }
 
-      /* primeira rolada após 2s; repete a cada 5.5s */
-      setTimeout(function () { spin(); setInterval(spin, 5500) }, 2000)
+      setTimeout(function () { spin(); setInterval(spin, 5500) }, 1800)
     })()
 
 
