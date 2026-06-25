@@ -836,19 +836,29 @@
        * e se expandem para fora, desvanecendo como ondas.
        * Inseridos antes do photo-clip → ficam atrás do ícone.
        */
-      var ringD   = Math.round(sz * 0.75)          /* 90 px — coincide com o clip circular */
-      var ringOff = Math.round((sz - ringD) / 2)   /* 15 px — centraliza no wrap           */
-      ;[0, 0.9, 1.8].forEach(function (delay) {
+      var ringD   = Math.round(sz * 0.75)
+      var ringOff = Math.round((sz - ringD) / 2)
+      var rings   = []
+      for (var ri = 0; ri < 3; ri++) {
         var ring = document.createElement('span')
         ring.style.cssText = 'position:absolute;'
           + 'width:' + ringD + 'px;height:' + ringD + 'px;'
           + 'border-radius:50%;'
-          + 'border:1.5px solid rgba(125,210,211,0.8);'
+          + 'border:1.5px solid rgba(180,180,185,0.65);'
           + 'top:' + ringOff + 'px;left:' + ringOff + 'px;'
-          + 'animation:radar-pulse 2.7s ease-out ' + delay + 's infinite;'
-          + 'pointer-events:none;'
-        wrap.insertBefore(ring, clip)   /* atrás do ícone */
-      })
+          + 'opacity:0;pointer-events:none;'
+        wrap.insertBefore(ring, clip)
+        rings.push(ring)
+      }
+
+      /* dispara as 3 ondas em sequência — chamado a cada troca de ícone */
+      function pulseRadar () {
+        rings.forEach(function (r, i) {
+          r.style.animation = 'none'
+          void r.offsetWidth                  /* força reflow para reiniciar */
+          r.style.animation = 'radar-pulse 2.1s ease-out ' + (i * 0.55) + 's 1 forwards'
+        })
+      }
 
       /* dois elementos em ping-pong */
       var elA = new Image()
@@ -881,6 +891,7 @@
                                 + 'opacity 300ms ease-out'
             el.style.transform  = 'scale(1)'
             el.style.opacity    = '1'
+            pulseRadar()   /* ondas disparam junto com a entrada do ícone */
           })
         })
       }
