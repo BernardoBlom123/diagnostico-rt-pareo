@@ -224,8 +224,8 @@
     #scroll-hint { display: none; }
 
     @keyframes scroll-bounce {
-      0%, 100% { transform: translateY(0);   opacity: 0.45; }
-      50%       { transform: translateY(7px); opacity: 1;    }
+      0%, 100% { transform: translateY(0);   opacity: 0.65; }
+      50%       { transform: translateY(8px); opacity: 1;    }
     }
 
     @keyframes radar-pulse {
@@ -293,7 +293,12 @@
 
       <!-- scroll hint — somente mobile -->
       <div id="scroll-hint" aria-hidden="true">
-        <i data-lucide="chevrons-down" width="22" height="22" stroke="#00D9BD" stroke-width="2"></i>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="#00D9BD" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="m7 13 5 5 5-5"/>
+          <path d="m7 7 5 5 5-5"/>
+        </svg>
       </div>
 
       <!-- hero cards -->
