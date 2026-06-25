@@ -61,14 +61,17 @@
     .hs-terms-field input[type="checkbox"]{width:15px;height:15px;margin-top:2px;flex-shrink:0;accent-color:#0F1D4B;cursor:pointer;}
     .hs-terms-field label{font-size:12px;color:#5F5E5A;line-height:1.5;cursor:pointer;margin:0;font-weight:400;}
     .hs-terms-field a{color:#0F1D4B;text-decoration:underline;}
-    .hs-btn-enviar{width:100%;background:#0F1D4B;color:#fff;border:none;border-radius:8px;cursor:pointer;padding:12px;font-family:inherit;font-weight:600;font-size:15px;transition:opacity .15s;}
+    .hs-btn-enviar{width:100%;background:#0F1D4B;color:#fff;border:none;border-radius:8px;cursor:pointer;padding:12px;font-family:inherit;font-weight:600;font-size:15px;transition:background .3s,opacity .15s;}
     .hs-btn-enviar:disabled{opacity:.5;cursor:not-allowed;}
+    .hs-btn-enviar.enviado{background:#16a34a !important;opacity:1 !important;cursor:default;}
     .hs-btn-enviar:active{transform:scale(.99);}
     #hs-status{font-size:13px;min-height:18px;margin-top:8px;}
     .hs-scoring-box{border-top:1px solid #d8d8d2;margin-top:14px;padding-top:12px;}
     .hs-scoring-hint{font-size:12px;color:#5F5E5A;margin:0 0 8px;}
-    .hs-btn-scoring{width:100%;background:#00D9BD;color:#0F1D4B;border:none;border-radius:8px;cursor:not-allowed;padding:12px;font-family:inherit;font-weight:600;font-size:15px;opacity:.4;transition:opacity .15s;}
-    .hs-btn-scoring.ativo{opacity:1;cursor:pointer;}
+    .hs-btn-scoring{width:100%;background:#00D9BD;color:#0F1D4B;border:none;border-radius:8px;cursor:not-allowed;padding:12px;font-family:inherit;font-weight:600;font-size:15px;opacity:.4;transition:opacity .15s,transform .18s,box-shadow .18s;}
+    .hs-btn-scoring.ativo{opacity:1;cursor:pointer;font-size:16px;padding:14px;box-shadow:0 4px 18px rgba(0,217,189,0.4);animation:scoring-glow 2s ease-in-out infinite;}
+    .hs-btn-scoring.ativo:hover{transform:translateY(-2px);}
+    @keyframes scoring-glow{0%,100%{box-shadow:0 4px 18px rgba(0,217,189,0.35);}50%{box-shadow:0 6px 36px rgba(0,217,189,0.7);}}
     @media(max-width:480px){.hs-row{grid-template-columns:1fr;}}
 
     /* ── Formulário sem scroll em notebooks ── */
@@ -564,6 +567,7 @@
         val_required: 'Preencha todos os campos obrigatórios.',
         val_email: 'Email inválido.',
         val_terms: 'Aceite os termos de uso para continuar.',
+        val_sent: '✓ Enviado',
         val_sending: 'Enviando...',
         val_success: '✓ Dados enviados com sucesso.',
         val_error_prefix: 'Erro: ',
@@ -605,6 +609,7 @@
         val_required: 'Please fill in all required fields.',
         val_email: 'Invalid email.',
         val_terms: 'Please accept the terms of use to continue.',
+        val_sent: '✓ Sent',
         val_sending: 'Submitting...',
         val_success: '✓ Data submitted successfully.',
         val_error_prefix: 'Error: ',
@@ -646,6 +651,7 @@
         val_required: 'Complete todos los campos obligatorios.',
         val_email: 'Email inválido.',
         val_terms: 'Acepte los términos de uso para continuar.',
+        val_sent: '✓ Enviado',
         val_sending: 'Enviando...',
         val_success: '✓ Datos enviados con éxito.',
         val_error_prefix: 'Error: ',
@@ -1174,7 +1180,9 @@
         var res  = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         var data = await res.json();
         if (res.ok) {
-          setStatus(T[lang].val_success, "#0F6E56");
+          var btnEnv = document.getElementById("btnEnviar");
+          btnEnv.textContent = T[lang].val_sent;
+          btnEnv.classList.add("enviado");
           var btn = document.getElementById("btnScoring");
           btn.disabled = false;
           btn.classList.add("ativo");
