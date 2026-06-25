@@ -816,123 +816,15 @@
 
 
     /* ══════════════════════════════════════
-       Roleta do avatar — rAF + física de fricção
+       Avatar — imagem estática (animação removida)
     ══════════════════════════════════════ */
     ;(function () {
-      var REEL = [
-        'links/hero-icon.svg',
-        'links/animation-icon.svg',
-        'links/hero-icon-2.svg',
-        'links/animation-icon-02.svg',
-        'links/hero-icon-3.svg',
-        'links/animation-01.svg',
-        'links/hero-icon-4.svg',
-        'links/animation-icon-04.svg',
-        'links/animation-02.svg',
-        'links/animation-03.svg',
-        'links/animation-04.svg',
-        'links/animation-05.svg',
-        'links/animation-06.svg',
-      ]
-
-      /*
-       * Física: tira horizontal contínua com 8 cópias do reel.
-       * A velocidade inicial é calibrada para que a série geométrica
-       * v0 / (1 - FRICTION)  ==  distância até o alvo escolhido.
-       * Resultado: desaceleração exponencial real sem saltos.
-       */
-      var COPIES   = 8
-      var FRICTION = 0.972   /* 2.8 % de perda por frame a ~60 fps  →  ~3.3 s de rolagem */
-
-      var clip    = document.getElementById('photo-clip')
-      var corners = ['c-tl','c-bl','c-tr','c-br'].map(function (id) { return document.getElementById(id) })
-      var OPEN    = ['translate(-13px,-13px)','translate(-13px,13px)','translate(13px,-13px)','translate(13px,13px)']
-      var sz      = document.getElementById('avatar-wrap').offsetWidth || 120
-
-      /* ── constrói a tira ── */
-      var strip = document.createElement('div')
-      strip.style.cssText = 'position:absolute;top:0;left:0;height:' + sz + 'px;'
-                          + 'display:flex;will-change:transform;'
-      for (var r = 0; r < COPIES; r++) {
-        REEL.forEach(function (src) {
-          var img = new Image()
-          img.src = src
-          img.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;flex-shrink:0;display:block;'
-          strip.appendChild(img)
-        })
-      }
-      clip.appendChild(strip)
-
-      /* ── estado ── */
-      /* inicia mostrando REEL[0] a partir da cópia 2 — headroom à esquerda para rolar */
-      var stripX   = -(REEL.length * 2) * sz
-      var velocity = 0
-      var targetX  = stripX
-      var finalIdx = 0
-      var rafId    = null
-      var idle     = true
-
-      strip.style.transform = 'translateX(' + stripX + 'px)'
-
-      function setFrame (open) {
-        corners.forEach(function (c, i) { c.style.transform = open ? OPEN[i] : '' })
-      }
-
-      /* ── fase 1: desaceleração exponencial ── */
-      function animateFrame () {
-        stripX   += velocity
-        velocity *= FRICTION
-        strip.style.transform = 'translateX(' + stripX + 'px)'
-        if (Math.abs(velocity) > 0.5) {
-          rafId = requestAnimationFrame(animateFrame)
-        } else {
-          rafId = requestAnimationFrame(settleFrame)
-        }
-      }
-
-      /* ── fase 2: mola suave — pousa no pixel exato ── */
-      function settleFrame () {
-        var dist = targetX - stripX
-        if (Math.abs(dist) > 0.25) {
-          stripX += dist * 0.2
-          strip.style.transform = 'translateX(' + stripX + 'px)'
-          rafId = requestAnimationFrame(settleFrame)
-        } else {
-          /* pouso concluído */
-          stripX = targetX
-          strip.style.transform = 'translateX(' + stripX + 'px)'
-          setTimeout(function () {
-            setFrame(false)
-            /* re-ancora a tira na cópia 2 para a próxima rodada ter headroom */
-            stripX = -(REEL.length * 2 + finalIdx) * sz
-            strip.style.transform = 'translateX(' + stripX + 'px)'
-            setTimeout(function () { idle = true }, 60)
-          }, 150)
-        }
-      }
-
-      /* ── disparo ── */
-      function spin () {
-        if (!idle) return
-        idle = false
-        cancelAnimationFrame(rafId)
-
-        finalIdx      = Math.floor(Math.random() * REEL.length)
-        var loops     = 3 + Math.floor(Math.random() * 2)          /* 3 ou 4 voltas completas */
-        targetX       = -((2 + loops) * REEL.length + finalIdx) * sz
-
-        /*
-         * v0 calibrado pela série geométrica:
-         *   Σ v0 · FRICTION^n  (n = 0..∞)  =  v0 / (1 − FRICTION)  =  |dist|
-         *   ⟹  v0 = dist · (1 − FRICTION)
-         */
-        velocity = (targetX - stripX) * (1 - FRICTION)
-
-        setFrame(true)
-        rafId = requestAnimationFrame(animateFrame)
-      }
-
-      setTimeout(function () { spin(); setInterval(spin, 5500) }, 1800)
+      var clip = document.getElementById('photo-clip')
+      var sz   = document.getElementById('avatar-wrap').offsetWidth || 120
+      var img  = new Image()
+      img.src  = 'links/hero-icon.svg'
+      img.style.cssText = 'position:absolute;top:0;left:0;width:' + sz + 'px;height:' + sz + 'px;'
+      clip.appendChild(img)
     })()
 
 
