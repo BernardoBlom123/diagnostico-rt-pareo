@@ -794,15 +794,121 @@
 
 
     /* ══════════════════════════════════════
-       Avatar — imagem estática (animação removida)
+       Slideshow do avatar — scale in / out
     ══════════════════════════════════════ */
     ;(function () {
+      /*
+       * Reel intercalado: animation-icon  →  animation-0x  →  animation-icon-0x  →  …
+       * Cada item entra com cubic-bezier spring (overshoot sutil),
+       * fica visível em scale(1), depois sai com ease-in scale + fade.
+       */
+      var REEL = [
+        'links/animation-icon.svg',
+        'links/animation-01.svg',
+        'links/animation-icon-02.svg',
+        'links/animation-02.svg',
+        'links/animation-icon-04.svg',
+        'links/animation-03.svg',
+        'links/animation-icon.svg',
+        'links/animation-04.svg',
+        'links/animation-icon-02.svg',
+        'links/animation-05.svg',
+        'links/animation-icon-04.svg',
+        'links/animation-06.svg',
+      ]
+
+      var ENTER_DUR = 520    /* ms — scale spring in    */
+      var EXIT_DUR  = 380    /* ms — scale down + fade  */
+      var HOLD_DUR  = 1900   /* ms — repouso em scale(1) */
+      var OVERLAP   = 110    /* ms — avanço do próximo antes do atual terminar de sair */
+
       var clip = document.getElementById('photo-clip')
       var sz   = document.getElementById('avatar-wrap').offsetWidth || 120
-      var img  = new Image()
-      img.src  = 'links/hero-icon.svg'
-      img.style.cssText = 'position:absolute;top:0;left:0;width:' + sz + 'px;height:' + sz + 'px;'
-      clip.appendChild(img)
+      var base = 'position:absolute;top:0;left:0;width:' + sz + 'px;height:' + sz + 'px;'
+
+      /* dois elementos em ping-pong */
+      var elA = new Image()
+      var elB = new Image()
+      elA.style.cssText = base + 'opacity:0;transform:scale(0.8);'
+      elB.style.cssText = base + 'opacity:0;transform:scale(0.8);'
+      elA.src = REEL[0]
+      elB.src = REEL[1]
+      clip.appendChild(elA)
+      clip.appendChild(elB)
+
+      var idx    = 0
+      var active = elA
+
+      function sleep (ms) { return new Promise(function (r) { setTimeout(r, ms) }) }
+
+      /*
+       * ENTER: parte de scale(0.8) opaco=0
+       * → cresce com spring até scale(1.0) — overshoot de ~3 % no pico
+       * → opacidade sobe em 280 ms
+       * cubic-bezier(0.34, 1.18, 0.64, 1): curva spring — y pode ultrapassar 1
+       */
+      function enter (el) {
+        el.style.transition = 'none'
+        el.style.transform  = 'scale(0.8)'
+        el.style.opacity    = '0'
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            el.style.transition = 'transform ' + ENTER_DUR + 'ms cubic-bezier(0.34,1.18,0.64,1),'
+                                + 'opacity 300ms ease-out'
+            el.style.transform  = 'scale(1)'
+            el.style.opacity    = '1'
+          })
+        })
+      }
+
+      /*
+       * EXIT: escala reduz para 0.86 enquanto desaparece
+       * ease-in — começa devagar e acelera para sumir
+       */
+      function exit (el) {
+        el.style.transition = 'transform ' + EXIT_DUR + 'ms cubic-bezier(0.4,0,1,1),'
+                            + 'opacity ' + EXIT_DUR + 'ms ease-in'
+        el.style.transform  = 'scale(0.86)'
+        el.style.opacity    = '0'
+      }
+
+      async function advance () {
+        var outEl   = active
+        var inEl    = active === elA ? elB : elA
+        var nextIdx = (idx + 1) % REEL.length
+
+        /* pré-carrega próximo src enquanto o atual ainda está visível */
+        inEl.src = REEL[nextIdx]
+
+        /* sai o atual */
+        exit(outEl)
+
+        /* leve sobreposição: próximo começa a entrar antes do atual sumir por completo */
+        await sleep(OVERLAP)
+        enter(inEl)
+
+        await sleep(ENTER_DUR)
+
+        /* reseta elemento que saiu para o próximo ciclo */
+        outEl.style.transition = 'none'
+        outEl.style.opacity    = '0'
+        outEl.style.transform  = 'scale(0.8)'
+
+        active = inEl
+        idx    = nextIdx
+
+        await sleep(HOLD_DUR)
+        advance()
+      }
+
+      /* entrada inicial */
+      async function start () {
+        enter(elA)
+        await sleep(ENTER_DUR + HOLD_DUR)
+        advance()
+      }
+
+      setTimeout(start, 500)
     })()
 
 
