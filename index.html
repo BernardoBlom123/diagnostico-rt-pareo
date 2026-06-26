@@ -142,9 +142,6 @@
       transform: translateX(4px);
     }
 
-    /* oculto por padrão; ativado no media query mobile abaixo */
-    #scroll-hint { display: none; }
-
     /* ── mobile ≤ 639 px ── */
     @media (max-width: 639px) {
       #view-home > main {
@@ -157,21 +154,7 @@
       #avatar-wrap    { margin-bottom: 12px !important; }
       #hero-h1        { margin-bottom: 10px !important; }
       #hero-content   { width: 100% !important; margin-bottom: 20px !important; }
-      #hero-h2        { font-size: 13px !important; margin-bottom: 6px !important; }
-      #scroll-hint        { display: flex; justify-content: center; margin: 0 0 14px; }
-      #scroll-hint svg    { animation: scroll-bounce 1.7s ease-in-out infinite; will-change: transform; }
-
-      /* cards: mesma aparência do desktop, apenas empilhados em coluna */
-      #hero-cards-row { flex-direction: column !important; gap: 8px !important; }
-      .hero-card {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        text-align: left !important;
-        padding: 18px 16px !important;
-      }
-      .hero-card h3 { font-size: 13px !important; }
-      .hero-card p  { font-size: 11.5px !important; }
+      #hero-desc      { font-size: 14px !important; margin-bottom: 20px !important; }
 
       #cta-analyze    { width: 100% !important; justify-content: center; }
       #quiz-title     { font-size: 20px !important; margin-bottom: 16px !important; }
@@ -181,60 +164,7 @@
 
     /* ── tablet 640–1023 px ── */
     @media (min-width: 640px) and (max-width: 1023px) {
-      #hero-content   { width: 100% !important; }
-      #hero-cards-row { gap: 8px !important; }
-      .hero-card      { padding: 18px 14px !important; }
-    }
-    /* ── hero cards ── */
-    .hero-card {
-      flex: 1;
-      min-width: 0;
-      background: #fff;
-      border-radius: 18px;
-      padding: 22px 18px 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 20px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      cursor: default;
-      transition: transform 0.26s cubic-bezier(0.34,1.1,0.64,1),
-                  box-shadow 0.26s ease;
-    }
-    .hero-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.08), 0 18px 48px rgba(0,0,0,0.10);
-    }
-    .hero-card .hc-icon {
-      width: 40px; height: 40px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 14px;
-      flex-shrink: 0;
-    }
-    .hero-card .hc-icon svg {
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .hero-card h3 {
-      font-size: 13px;
-      font-weight: 600;
-      color: #1D1D1F;
-      margin: 0 0 5px;
-      line-height: 1.25;
-      letter-spacing: -0.2px;
-    }
-    .hero-card p {
-      font-size: 11.5px;
-      font-weight: 400;
-      color: #8A8A8E;
-      margin: 0;
-      line-height: 1.55;
-      text-align: left;
-    }
-
-    @keyframes scroll-bounce {
-      0%, 100% { transform: translateY(0);   opacity: 0.65; }
-      50%       { transform: translateY(8px); opacity: 1;    }
+      #hero-content { width: 100% !important; }
     }
 
     @keyframes radar-pulse {
@@ -298,46 +228,7 @@
         A Reforma Tributária chegou<br>Sua cadeia de fornecedores está pronta?
       </h1>
 
-      <h2 id="hero-h2" style="font-size:15px;font-weight:500;color:#6B7280;margin:0 0 16px;text-align:center;letter-spacing:0.01em;width:100%;">Descubra impactos em:</h2>
-
-      <!-- scroll hint — somente mobile -->
-      <div id="scroll-hint" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="#0F1D4B" stroke-width="2.2"
-             stroke-linecap="round" stroke-linejoin="round">
-          <path d="m7 13 5 5 5-5"/>
-          <path d="m7 7 5 5 5-5"/>
-        </svg>
-      </div>
-
-      <!-- hero cards -->
-      <div id="hero-cards-row" style="display:flex;gap:10px;width:100%;">
-
-        <div class="hero-card">
-          <div class="hc-icon" style="background:rgba(229,57,53,0.08);">
-            <i data-lucide="trending-down" width="19" height="19" stroke="#E53935" stroke-width="1.75"></i>
-          </div>
-          <h3 id="hc1t">Perda de créditos</h3>
-          <p id="hc1d">CBS e IBS não aproveitados por fornecedores inaptos</p>
-        </div>
-
-        <div class="hero-card">
-          <div class="hc-icon" style="background:rgba(0,122,255,0.08);">
-            <i data-lucide="git-branch" width="19" height="19" stroke="#1A73E8" stroke-width="1.75"></i>
-          </div>
-          <h3 id="hc2t">Bloqueios no split</h3>
-          <p id="hc2d">Repasse automático travado por fornecedores irregulares</p>
-        </div>
-
-        <div class="hero-card">
-          <div class="hc-icon" style="background:rgba(88,86,214,0.08);">
-            <i data-lucide="eye-off" width="19" height="19" stroke="#5856D6" stroke-width="1.75"></i>
-          </div>
-          <h3 id="hc3t">Riscos invisíveis</h3>
-          <p id="hc3d">Passivos fiscais ocultos que só surgem na auditoria</p>
-        </div>
-
-      </div><!-- /hero-cards-row -->
+      <p id="hero-desc" style="font-size:16px;font-weight:400;color:#6B7280;margin:0 auto 28px;text-align:center;line-height:1.7;max-width:560px;width:100%;">Descubra em minutos se os fornecedores expõem sua empresa a perda de créditos, bloqueios no split payment e riscos fiscais invisíveis.</p>
       </div><!-- /hero-content -->
 
       <button id="cta-analyze" onclick="startQuiz()"
@@ -693,13 +584,7 @@
         btn.classList.toggle('active', btn.getAttribute('data-lang') === l)
       })
       document.getElementById('hero-h1').innerHTML = t.h1
-      document.getElementById('hero-h2').textContent = t.hero_h2
-      document.getElementById('hc1t').textContent = t.hc1t
-      document.getElementById('hc1d').textContent = t.hc1d
-      document.getElementById('hc2t').textContent = t.hc2t
-      document.getElementById('hc2d').textContent = t.hc2d
-      document.getElementById('hc3t').textContent = t.hc3t
-      document.getElementById('hc3d').textContent = t.hc3d
+      document.getElementById('hero-desc').textContent = t.hero_desc
       document.getElementById('cta-analyze-text').textContent = t.cta_analyze
       document.querySelectorAll('.footer-copy').forEach(function (el) { el.textContent = t.footer })
       document.getElementById('quiz-back-text').textContent = t.back
