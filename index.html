@@ -302,7 +302,7 @@
        VIEW 2.5 — Formulário
   ══════════════════════════════════════ -->
   <div id="view-form" class="view">
-    <main class="flex-1 flex flex-col items-center px-4 pt-4 pb-2" style="overflow-y:auto;min-height:0;">
+    <main class="flex-1 flex flex-col items-center justify-center px-4 pt-4 pb-2" style="overflow-y:auto;min-height:0;">
       <div id="form-container" style="width:100%;max-width:520px;">
 
         <div class="hs-card">
@@ -310,60 +310,82 @@
           <p class="hs-sub" id="form-desc">Preencha seus dados para liberar sua Análise de impacto.</p>
 
           <div id="hsForm">
-            <div class="hs-field">
-              <label id="form-label-nome" for="f_nome">Nome e sobrenome *</label>
-              <input id="f_nome" type="text" autocomplete="name" />
+            <!-- Dots (mobile only) -->
+            <div id="form-step-dots" style="display:none;justify-content:center;gap:6px;margin-bottom:14px;">
+              <span id="dot1" style="width:7px;height:7px;border-radius:50%;background:#0F1D4B;display:block;transition:background .25s;"></span>
+              <span id="dot2" style="width:7px;height:7px;border-radius:50%;background:#D1D5DB;display:block;transition:background .25s;"></span>
             </div>
-            <div class="hs-row">
+
+            <!-- Step 1: dados pessoais -->
+            <div id="form-step1">
               <div class="hs-field">
-                <label id="form-label-tel" for="f_tel">Telefone *</label>
-                <input id="f_tel" type="tel" autocomplete="tel" placeholder="+55 12 99999-9999" />
+                <label id="form-label-nome" for="f_nome">Nome e sobrenome *</label>
+                <input id="f_nome" type="text" autocomplete="name" />
+              </div>
+              <div class="hs-row">
+                <div class="hs-field">
+                  <label id="form-label-tel" for="f_tel">Telefone *</label>
+                  <input id="f_tel" type="tel" autocomplete="tel" placeholder="+55 12 99999-9999" />
+                </div>
+                <div class="hs-field">
+                  <label id="form-label-email" for="f_email">Email corporativo *</label>
+                  <input id="f_email" type="email" autocomplete="email" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: dados da empresa -->
+            <div id="form-step2">
+              <button type="button" id="btnVoltarStep" onclick="formPrevStep()"
+                style="display:none;align-items:center;gap:4px;color:#8E8E8E;background:none;border:none;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;padding:0;margin-bottom:12px;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span id="form-back-step-text">Voltar</span>
+              </button>
+              <div class="hs-row">
+                <div class="hs-field">
+                  <label id="form-label-cargo" for="f_cargo">Cargo *</label>
+                  <input id="f_cargo" type="text" autocomplete="organization-title" />
+                </div>
+                <div class="hs-field">
+                  <label id="form-label-empresa" for="f_empresa">Nome da empresa *</label>
+                  <input id="f_empresa" type="text" autocomplete="organization" />
+                </div>
               </div>
               <div class="hs-field">
-                <label id="form-label-email" for="f_email">Email corporativo *</label>
-                <input id="f_email" type="email" autocomplete="email" />
+                <label id="form-label-segmento" for="f_segmento">Segmento da empresa *</label>
+                <select id="f_segmento">
+                  <option value="">Selecione...</option>
+                  <option value="Tecnologia e Software">Tecnologia e Software</option>
+                  <option value="Saúde">Saúde</option>
+                  <option value="Educação">Educação</option>
+                  <option value="Comércio (varejo/atacado)">Comércio (varejo/atacado)</option>
+                  <option value="Serviços Financeiros">Serviços Financeiros</option>
+                  <option value="Manufatura">Manufatura</option>
+                  <option value="Construção e Imobiliário">Construção e Imobiliário</option>
+                  <option value="Alimentação e Bebidas">Alimentação e Bebidas</option>
+                  <option value="Agronegócio">Agronegócio</option>
+                  <option value="Logística e Transporte">Logística e Transporte</option>
+                </select>
               </div>
-            </div>
-            <div class="hs-row">
               <div class="hs-field">
-                <label id="form-label-cargo" for="f_cargo">Cargo *</label>
-                <input id="f_cargo" type="text" autocomplete="organization-title" />
+                <label id="form-label-regime" for="f_regime">Regime fiscal *</label>
+                <select id="f_regime">
+                  <option value="">Selecione...</option>
+                  <option value="Lucro Presumido">Lucro Presumido</option>
+                  <option value="Lucro Real">Lucro Real</option>
+                  <option value="Simples Nacional">Simples Nacional</option>
+                  <option value="Outros">Outros</option>
+                </select>
               </div>
-              <div class="hs-field">
-                <label id="form-label-empresa" for="f_empresa">Nome da empresa *</label>
-                <input id="f_empresa" type="text" autocomplete="organization" />
+              <div class="hs-terms-field">
+                <input type="checkbox" id="f_termos" required />
+                <label for="f_termos"><span id="form-terms-pre">Li e concordo com os </span><a id="form-terms-link" href="termos.html" target="_blank" rel="noopener">termos de uso</a><span id="form-terms-post"> e autorizo o tratamento dos meus dados conforme a LGPD.</span></label>
               </div>
             </div>
-            <div class="hs-field">
-              <label id="form-label-segmento" for="f_segmento">Segmento da empresa *</label>
-              <select id="f_segmento">
-                <option value="">Selecione...</option>
-                <option value="Tecnologia e Software">Tecnologia e Software</option>
-                <option value="Saúde">Saúde</option>
-                <option value="Educação">Educação</option>
-                <option value="Comércio (varejo/atacado)">Comércio (varejo/atacado)</option>
-                <option value="Serviços Financeiros">Serviços Financeiros</option>
-                <option value="Manufatura">Manufatura</option>
-                <option value="Construção e Imobiliário">Construção e Imobiliário</option>
-                <option value="Alimentação e Bebidas">Alimentação e Bebidas</option>
-                <option value="Agronegócio">Agronegócio</option>
-                <option value="Logística e Transporte">Logística e Transporte</option>
-              </select>
-            </div>
-            <div class="hs-field">
-              <label id="form-label-regime" for="f_regime">Regime fiscal *</label>
-              <select id="f_regime">
-                <option value="">Selecione...</option>
-                <option value="Lucro Presumido">Lucro Presumido</option>
-                <option value="Lucro Real">Lucro Real</option>
-                <option value="Simples Nacional">Simples Nacional</option>
-                <option value="Outros">Outros</option>
-              </select>
-            </div>
-            <div class="hs-terms-field">
-              <input type="checkbox" id="f_termos" required />
-              <label for="f_termos"><span id="form-terms-pre">Li e concordo com os </span><a id="form-terms-link" href="termos.html" target="_blank" rel="noopener">termos de uso</a><span id="form-terms-post"> e autorizo o tratamento dos meus dados conforme a LGPD.</span></label>
-            </div>
+
+            <button type="button" id="btnProximo" class="hs-btn-enviar" style="display:none;" onclick="formNextStep()">Próximo</button>
             <button type="button" id="btnEnviar" class="hs-btn-enviar">Enviar</button>
             <div id="hs-status"></div>
           </div>
@@ -457,6 +479,7 @@
         form_segmento_opts: ['Tecnologia e Software','Saúde','Educação','Comércio (varejo/atacado)','Serviços Financeiros','Manufatura','Construção e Imobiliário','Alimentação e Bebidas','Agronegócio','Logística e Transporte'],
         form_regime_opts: ['Lucro Presumido','Lucro Real','Simples Nacional','Outros'],
         form_btn_enviar: 'Enviar',
+        form_next: 'Próximo',
         form_terms: ['Li e concordo com os ', 'termos de uso', ' e autorizo o tratamento dos meus dados conforme a LGPD.'],
         form_scoring_hint: 'Sua Análise de impacto será liberada após o envio dos dados.',
         val_required: 'Preencha todos os campos obrigatórios.',
@@ -499,6 +522,7 @@
         form_segmento_opts: ['Technology & Software','Healthcare','Education','Retail & Wholesale','Financial Services','Manufacturing','Construction & Real Estate','Food & Beverage','Agribusiness','Logistics & Transportation'],
         form_regime_opts: ['Presumed Profit','Real Profit','Simples Nacional','Other'],
         form_btn_enviar: 'Submit',
+        form_next: 'Next',
         form_terms: ['I have read and agree to the ', 'terms of use', ', and authorize the processing of my data under the LGPD.'],
         form_scoring_hint: 'Your Impact Analysis will be released after data submission.',
         val_required: 'Please fill in all required fields.',
@@ -541,6 +565,7 @@
         form_segmento_opts: ['Tecnología y Software','Salud','Educación','Comercio (minorista/mayorista)','Servicios Financieros','Manufactura','Construcción e Inmobiliario','Alimentación y Bebidas','Agronegocios','Logística y Transporte'],
         form_regime_opts: ['Lucro Presumido','Lucro Real','Simples Nacional','Otros'],
         form_btn_enviar: 'Enviar',
+        form_next: 'Siguiente',
         form_terms: ['Leí y acepto los ', 'términos de uso', ', y autorizo el tratamiento de mis datos conforme a la LGPD.'],
         form_scoring_hint: 'Su Análisis de impacto será publicado tras el envío de datos.',
         val_required: 'Complete todos los campos obligatorios.',
@@ -613,8 +638,10 @@
       document.getElementById('form-terms-pre').textContent     = t.form_terms[0]
       document.getElementById('form-terms-link').textContent    = t.form_terms[1]
       document.getElementById('form-terms-post').textContent    = t.form_terms[2]
-      document.getElementById('btnEnviar').textContent          = t.form_btn_enviar
-      document.getElementById('form-scoring-hint').textContent  = t.form_scoring_hint
+      document.getElementById('btnEnviar').textContent           = t.form_btn_enviar
+      document.getElementById('btnProximo').textContent          = t.form_next
+      document.getElementById('form-back-step-text').textContent = t.back
+      document.getElementById('form-scoring-hint').textContent   = t.form_scoring_hint
       if (document.getElementById('view-quiz').classList.contains('active')) renderQuestion(qIndex)
       if (document.getElementById('view-result').classList.contains('active')) showResults()
     }
@@ -718,6 +745,58 @@
       }
     })
 
+    /* ── steps do formulário (mobile) ── */
+    var formStep = 1
+
+    function initFormSteps () {
+      var mobile = window.innerWidth <= 639
+      document.getElementById('form-step-dots').style.display  = mobile ? 'flex'   : 'none'
+      document.getElementById('btnProximo').style.display      = mobile ? 'block'  : 'none'
+      document.getElementById('btnEnviar').style.display       = mobile ? 'none'   : ''
+      document.getElementById('form-step1').style.display      = ''
+      document.getElementById('form-step2').style.display      = mobile ? 'none'   : ''
+      document.getElementById('btnVoltarStep').style.display   = 'none'
+      document.getElementById('dot1').style.background         = '#0F1D4B'
+      document.getElementById('dot2').style.background         = '#D1D5DB'
+      document.getElementById('hs-status').textContent         = ''
+      formStep = 1
+    }
+
+    function formNextStep () {
+      var nome  = document.getElementById('f_nome').value.trim()
+      var tel   = document.getElementById('f_tel').value.trim()
+      var email = document.getElementById('f_email').value.trim()
+      var t     = T[lang]
+      var status = document.getElementById('hs-status')
+      if (!nome || !tel || !email) {
+        status.textContent = t.val_required; status.style.color = '#A32D2D'; return
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.textContent = t.val_email; status.style.color = '#A32D2D'; return
+      }
+      status.textContent = ''
+      document.getElementById('form-step1').style.display    = 'none'
+      document.getElementById('btnProximo').style.display    = 'none'
+      document.getElementById('form-step2').style.display    = ''
+      document.getElementById('btnEnviar').style.display     = ''
+      document.getElementById('btnVoltarStep').style.display = 'flex'
+      document.getElementById('dot1').style.background       = '#D1D5DB'
+      document.getElementById('dot2').style.background       = '#0F1D4B'
+      formStep = 2
+    }
+
+    function formPrevStep () {
+      document.getElementById('form-step2').style.display    = 'none'
+      document.getElementById('btnEnviar').style.display     = 'none'
+      document.getElementById('btnVoltarStep').style.display = 'none'
+      document.getElementById('form-step1').style.display    = ''
+      document.getElementById('btnProximo').style.display    = 'block'
+      document.getElementById('dot1').style.background       = '#0F1D4B'
+      document.getElementById('dot2').style.background       = '#D1D5DB'
+      document.getElementById('hs-status').textContent       = ''
+      formStep = 1
+    }
+
     /* ── inicia / reinicia quiz ── */
     function startQuiz () {
       qIndex     = 0
@@ -767,6 +846,7 @@
         renderQuestion(qIndex)
       } else {
         showView('view-form')
+        initFormSteps()
       }
     }
 
