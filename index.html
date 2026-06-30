@@ -159,7 +159,8 @@
       #cta-analyze    { width: 100% !important; justify-content: center; }
       #quiz-title     { font-size: 20px !important; margin-bottom: 16px !important; }
       #quiz-question  { font-size: 14px !important; margin-bottom: 28px !important; }
-      #res-score-pct  { font-size: 48px !important; letter-spacing: -1px !important; }
+      #res-kpi-row    { grid-template-columns: 1fr 1fr !important; margin: -20px 4px 0 !important; }
+      #res-hero-section { padding: 24px 20px 36px !important; }
     }
 
     /* ── tablet 640–1023 px ── */
@@ -171,7 +172,10 @@
       0%   { transform: scale(1);   opacity: 0.6; }
       100% { transform: scale(2.5); opacity: 0;   }
     }
+
+    .num { font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 </head>
 <body class="h-screen flex flex-col">
 
@@ -408,26 +412,96 @@
   <!-- ══════════════════════════════════════
        VIEW 3 — Resultado
   ══════════════════════════════════════ -->
-  <div id="view-result" class="view">
-    <main class="flex-1 flex flex-col items-center px-4 py-8" style="overflow-y:auto;">
-      <div style="width:100%;max-width:600px;">
+  <div id="view-result" class="view" style="background:#ECEEF0;">
+    <!-- hidden compat element for setLang() -->
+    <span id="res-score-label" style="display:none"></span>
+    <main class="flex-1" style="overflow-y:auto;min-height:0;">
+      <div style="max-width:740px;margin:0 auto;padding:24px 20px 48px;">
 
-        <!-- Score geral -->
-        <div style="text-align:center;margin-bottom:40px;">
-          <p id="res-score-label" style="font-size:13px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Score geral</p>
-          <div id="res-score-pct"
-               style="font-size:clamp(48px,6vw,64px);font-weight:700;line-height:1;letter-spacing:-2px;margin-bottom:12px;color:#1F2937;"></div>
-          <span id="res-level-badge"
-                style="display:inline-block;padding:4px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;"></span>
+        <!-- HERO -->
+        <section id="res-hero-section" style="background:#2E334E;background-image:radial-gradient(120% 140% at 85% -10%, rgba(125,210,211,.18), transparent 55%);border-radius:22px;padding:42px 44px 60px;position:relative;overflow:hidden;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);">Diagnóstico de prontidão · Reforma Tributária</div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:18px;">
+            <div style="display:flex;align-items:flex-start;gap:2px;min-width:0;">
+              <span id="res-score-pct" class="num" style="font-size:clamp(72px,12vw,128px);line-height:.82;font-weight:800;color:#fff;"></span>
+              <span class="num" style="font-size:clamp(28px,4.5vw,44px);font-weight:700;color:rgba(255,255,255,.55);margin-top:clamp(8px,1.5vw,14px);">%</span>
+            </div>
+            <div style="flex:1;min-width:200px;max-width:320px;padding-bottom:4px;">
+              <div id="res-level-badge" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;">
+                <span id="res-badge-dot" style="width:9px;height:9px;border-radius:50%;flex-shrink:0;"></span>
+                <span id="res-badge-text"></span>
+              </div>
+              <p id="res-read-text" style="font-size:14px;color:rgba(255,255,255,.78);margin:14px 0 0;line-height:1.6;"></p>
+            </div>
+          </div>
+          <!-- 3-segment linear meter -->
+          <div style="position:relative;margin-top:36px;">
+            <div style="display:flex;height:12px;border-radius:999px;overflow:hidden;">
+              <div style="flex:40;background:rgba(192,69,59,.85);"></div>
+              <div style="flex:30;background:rgba(176,125,30,.85);"></div>
+              <div style="flex:30;background:rgba(62,139,104,.9);"></div>
+            </div>
+            <div id="res-meter-marker" style="position:absolute;top:-9px;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%);">
+              <div style="width:3px;height:30px;background:#fff;border-radius:2px;box-shadow:0 0 0 3px rgba(46,51,78,.95);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);margin-top:11px;">
+              <span>0 · alto risco</span>
+              <span style="margin-left:6%;">40 · médio</span>
+              <span>70 · baixo</span>
+              <span>100</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- KPI ROW (overlaps hero) -->
+        <div id="res-kpi-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-30px 12px 0;position:relative;z-index:2;"></div>
+
+        <!-- RADAR -->
+        <div style="background:#fff;border:1px solid #DCE0E3;border-radius:16px;padding:24px 24px 20px;margin-top:14px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#828595;">Prontidão por área</div>
+          <div style="display:flex;flex-wrap:wrap;gap:18px;font-size:12.5px;font-weight:500;color:#585C71;margin-top:12px;">
+            <span style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:3px;border-radius:2px;background:#C0453B;display:inline-block;"></span><span id="res-legend-you">Você hoje</span></span>
+            <span style="display:flex;align-items:center;gap:7px;"><span style="width:16px;border-top:2px dashed #3E8B68;display:inline-block;"></span><span id="res-legend-target">Meta · baixo risco (70%)</span></span>
+          </div>
+          <div style="margin-top:8px;">
+            <svg id="res-radar" viewBox="0 0 520 300" width="100%" style="max-width:500px;display:block;margin:4px auto 0;overflow:visible;" role="img" aria-label="Radar de prontidão por área"></svg>
+          </div>
         </div>
 
-        <!-- Breakdown por bloco -->
-        <div id="res-blocks" style="display:flex;flex-direction:column;gap:10px;margin-bottom:40px;"></div>
+        <!-- RANKED AREAS -->
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin:38px 4px 4px;">
+          <h2 id="res-areas-title" style="font-size:17px;font-weight:700;margin:0;letter-spacing:-.01em;color:#2E334E;">Áreas ordenadas por prioridade</h2>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:#585C71;"><span style="width:14px;border-top:2px dashed #3E8B68;display:inline-block;"></span><span id="res-goal-label">meta 70%</span></div>
+        </div>
+        <div id="res-blocks" style="display:flex;flex-direction:column;gap:10px;margin-top:14px;"></div>
 
-        <!-- CTAs -->
-        <div style="display:flex;justify-content:center;">
+        <!-- CTA -->
+        <section style="margin-top:18px;background:#2E334E;background-image:radial-gradient(120% 160% at 100% 0%, rgba(192,69,59,.16), transparent 60%);border-radius:18px;padding:26px 28px;">
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <span style="flex-shrink:0;width:46px;height:46px;border-radius:13px;background:rgba(192,69,59,.2);border:1px solid rgba(192,69,59,.35);display:grid;place-items:center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F0A79D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.5 14.72A2 2 0 0 0 3.5 21.5h17a2 2 0 0 0 1.71-2.92l-8.5-14.72a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+            </span>
+            <div style="flex:1;min-width:0;">
+              <h3 id="res-cta-title" style="font-size:16.5px;font-weight:700;margin:0 0 4px;color:#fff;letter-spacing:-.01em;"></h3>
+              <p id="res-cta-sub" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.74);margin:0;line-height:1.55;"></p>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:11px;margin-top:22px;">
+            <button id="res-btn-contact" onclick="showView('view-form')"
+              style="background:#24787A;color:#fff;border:none;font-family:inherit;font-size:14.5px;font-weight:700;padding:14px 24px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;box-shadow:0 8px 20px -8px rgba(0,0,0,.55);transition:filter .15s,transform .1s;"></button>
+            <button id="res-btn-pdf" onclick="genPdfResult()"
+              style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.32);font-family:inherit;font-size:14px;font-weight:600;padding:13px 20px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:background .15s,border-color .15s;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
+              <span id="res-btn-pdf-text">Baixar relatório (PDF)</span>
+            </button>
+          </div>
+        </section>
+
+        <p style="text-align:center;font-size:11.5px;font-weight:500;color:#828595;margin-top:24px;">© 2026 CLA Brasil — Páreo Consultoria · diagnóstico de prontidão à Reforma Tributária</p>
+
+        <div style="display:flex;justify-content:center;padding:16px 0 4px;">
           <button id="res-redo-btn" onclick="startQuiz()"
-            style="border-color:#848484;color:#8E8E8E;"
+            style="border-color:#C4C4C4;color:#8E8E8E;"
             class="px-7 py-3.5 rounded-full border text-sm font-medium hover:bg-black/5 transition-colors">
             Refazer diagnóstico
           </button>
@@ -490,6 +564,11 @@
         val_success: '✓ Dados enviados com sucesso.',
         val_error_prefix: 'Erro: ',
         val_network: 'Falha de rede. Tente novamente.',
+        res_pts: 'Pontos',
+        res_critical: 'Áreas críticas',
+        res_priority: 'Prioridade',
+        res_next_step: 'Próximo passo',
+        res_cta_contact: 'Quero ser contatado',
       },
       en: {
         h1: 'The Tax Reform has arrived<br>Is your supply chain ready?',
@@ -533,6 +612,11 @@
         val_success: '✓ Data submitted successfully.',
         val_error_prefix: 'Error: ',
         val_network: 'Network error. Please try again.',
+        res_pts: 'Points',
+        res_critical: 'Critical areas',
+        res_priority: 'Priority',
+        res_next_step: 'Next step',
+        res_cta_contact: 'I want to be contacted',
       },
       es: {
         h1: 'La Reforma Tributaria llegó<br>¿Tu cadena de proveedores está lista?',
@@ -576,6 +660,11 @@
         val_success: '✓ Datos enviados con éxito.',
         val_error_prefix: 'Error: ',
         val_network: 'Error de red. Inténtelo de nuevo.',
+        res_pts: 'Puntos',
+        res_critical: 'Áreas críticas',
+        res_priority: 'Prioridad',
+        res_next_step: 'Próx. paso',
+        res_cta_contact: 'Quiero ser contactado',
       }
     }
 
@@ -856,58 +945,267 @@
       return pct >= 70 ? t.risk[0] : pct >= 40 ? t.risk[1] : t.risk[2]
     }
     function riskColor (pct) {
-      return pct >= 70 ? '#16A34A' : pct >= 40 ? '#D97706' : '#DC2626'
+      return pct >= 70 ? '#3E8B68' : pct >= 40 ? '#B07D1E' : '#C0453B'
     }
     function riskBg (pct) {
-      return pct >= 70 ? '#DCFCE7' : pct >= 40 ? '#FEF3C7' : '#FEE2E2'
+      return pct >= 70 ? '#E3F0E9' : pct >= 40 ? '#F5EEDB' : '#F7E7E2'
     }
 
     function showResults () {
       var totalMax   = 40
       var totalScore = Object.keys(blockScore).reduce(function (s, k) { return s + blockScore[k] }, 0)
       var totalPct   = Math.round((totalScore / totalMax) * 100)
-      var level      = riskLevel(totalPct)
+      var t          = T[lang]
       var color      = riskColor(totalPct)
       var bg         = riskBg(totalPct)
+      var level      = riskLevel(totalPct)
+      var NAVY       = '#2E334E'
 
-      document.getElementById('res-score-pct').textContent    = totalPct + '%'
+      /* Hero */
+      document.getElementById('res-score-pct').textContent    = totalPct
+      document.getElementById('res-meter-marker').style.left  = totalPct + '%'
       var badge = document.getElementById('res-level-badge')
-      badge.textContent      = level
       badge.style.background = bg
       badge.style.color      = color
+      document.getElementById('res-badge-dot').style.background = color
+      document.getElementById('res-badge-text').textContent     = level
 
+      /* Per-block data */
+      var blockIds = ['A', 'B', 'C', 'D', 'E']
+      var SHORT_PT = { A:'Fornecedores', B:'Contr. fornec.', C:'Contr. clientes', D:'Governança', E:'Prontidão' }
+      var SHORT_EN = { A:'Suppliers', B:'Supp. contracts', C:'Client contracts', D:'Governance', E:'Tax Readiness' }
+      var SHORT_ES = { A:'Proveedores', B:'Contr. prov.', C:'Contr. clientes', D:'Gobernanza', E:'Pront. Tributaria' }
+      var SHORT    = lang === 'en' ? SHORT_EN : lang === 'es' ? SHORT_ES : SHORT_PT
+
+      var blockData = blockIds.map(function (k) {
+        var sc  = blockScore[k]
+        var pct = Math.round((sc / BLOCKS[k].max) * 100)
+        return { id: k, sc: sc, pct: pct, color: riskColor(pct), bg: riskBg(pct), level: riskLevel(pct), short: SHORT[k] }
+      })
+
+      var atRisk      = blockData.filter(function (b) { return b.pct < 40 }).length
+      var sortedByPct = blockData.slice().sort(function (a, b) { return a.pct - b.pct })
+      var worst       = sortedByPct[0]
+
+      /* Hero read text */
+      var readTxt = {
+        pt: totalScore + ' de ' + totalMax + ' pontos. A empresa está exposta em ' + atRisk + ' das 5 áreas de impacto da Reforma.',
+        en: totalScore + ' of ' + totalMax + ' points. The company is exposed in ' + atRisk + ' of the 5 Tax Reform impact areas.',
+        es: totalScore + ' de ' + totalMax + ' puntos. La empresa está expuesta en ' + atRisk + ' de las 5 áreas de impacto de la Reforma.'
+      }
+      document.getElementById('res-read-text').textContent = readTxt[lang]
+
+      /* KPI row */
+      var kpiEl = document.getElementById('res-kpi-row')
+      kpiEl.innerHTML = ''
+      var kpiSubPts = { pt: 'respostas pontuadas', en: 'scored responses', es: 'respuestas puntuadas' }
+      var kpiSubCri = { pt: 'abaixo de 40%', en: 'below 40%', es: 'por debajo de 40%' }
+      var kpiData = [
+        { label: t.score_label,  value: totalPct + '%',              sub: level,                 color: color },
+        { label: t.res_pts,      value: totalScore + '/' + totalMax, sub: kpiSubPts[lang],       color: NAVY },
+        { label: t.res_critical, value: atRisk + '/5',               sub: kpiSubCri[lang],       color: '#C0453B' },
+        { label: t.res_priority, value: worst.id,                    sub: worst.short,           color: NAVY }
+      ]
+      kpiData.forEach(function (k) {
+        var card = document.createElement('div')
+        card.style.cssText = 'background:#fff;border:1px solid #DCE0E3;border-radius:14px;padding:16px 16px 15px;box-shadow:0 8px 24px -14px rgba(46,51,78,.3);'
+        card.innerHTML = '<div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#828595;">' + k.label + '</div>'
+                       + '<div class="num" style="font-size:30px;font-weight:800;line-height:1;margin-top:10px;color:' + k.color + ';">' + k.value + '</div>'
+                       + '<div style="font-size:11.5px;font-weight:500;color:#585C71;margin-top:5px;">' + k.sub + '</div>'
+        kpiEl.appendChild(card)
+      })
+
+      /* Radar */
+      buildRadar(blockData)
+
+      /* Legend i18n */
+      var lgdYou    = { pt: 'Você hoje',                    en: 'You today',              es: 'Usted hoy' }
+      var lgdTarget = { pt: 'Meta · baixo risco (70%)',     en: 'Target · low risk (70%)',es: 'Meta · bajo riesgo (70%)' }
+      var areasHdr  = { pt: 'Áreas ordenadas por prioridade', en: 'Areas ranked by priority', es: 'Áreas ordenadas por prioridad' }
+      var goalLbl   = { pt: 'meta 70%',                     en: 'target 70%',             es: 'meta 70%' }
+      document.getElementById('res-legend-you').textContent    = lgdYou[lang]
+      document.getElementById('res-legend-target').textContent = lgdTarget[lang]
+      document.getElementById('res-areas-title').textContent   = areasHdr[lang]
+      document.getElementById('res-goal-label').textContent    = goalLbl[lang]
+
+      /* Ranked area list (worst first) */
       var container = document.getElementById('res-blocks')
       container.innerHTML = ''
-      Object.keys(BLOCKS).forEach(function (k) {
-        var b    = BLOCKS[k]
-        var sc   = blockScore[k]
-        var pct  = Math.round((sc / b.max) * 100)
-        var col  = riskColor(pct)
-        var bgc  = riskBg(pct)
-        var lvl  = riskLevel(pct)
-
-        var row = document.createElement('div')
-        row.style.cssText = 'background:#fff;border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;'
-
-        var top = document.createElement('div')
-        top.style.cssText = 'display:flex;justify-content:space-between;align-items:center;'
-        top.innerHTML =
-          '<span style="font-size:13px;font-weight:600;color:#374151;">' + b.name[lang] + '</span>' +
-          '<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:' + bgc + ';color:' + col + ';">' + lvl + '</span>'
-
-        var barWrap = document.createElement('div')
-        barWrap.style.cssText = 'height:4px;background:#E5E7EB;border-radius:2px;'
-        var bar = document.createElement('div')
-        bar.style.cssText = 'height:4px;border-radius:2px;background:' + col + ';width:' + pct + '%;'
-        barWrap.appendChild(bar)
-
-        row.appendChild(top)
-        row.appendChild(barWrap)
-        container.appendChild(row)
+      sortedByPct.forEach(function (b, idx) {
+        var info = BLOCKS[b.id]
+        var card = document.createElement('article')
+        card.style.cssText = 'background:#fff;border:1px solid #DCE0E3;border-radius:16px;padding:20px 22px;'
+        card.innerHTML =
+          '<div style="display:flex;align-items:center;gap:16px;">'
+        + '<div class="num" style="flex-shrink:0;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:16px;font-weight:800;color:#fff;background:' + b.color + ';">' + (idx + 1) + '</div>'
+        + '<div style="flex:1;min-width:0;"><div style="font-size:15.5px;font-weight:600;color:#2E334E;line-height:1.3;">' + info.name[lang] + '</div></div>'
+        + '<div style="text-align:right;flex-shrink:0;">'
+        + '<div class="num" style="font-size:30px;font-weight:800;line-height:1;color:' + b.color + ';">' + b.pct + '%</div>'
+        + '<div style="font-size:11px;font-weight:600;color:' + b.color + ';margin-top:3px;">' + b.level + '</div>'
+        + '</div></div>'
+        + '<div style="position:relative;height:9px;background:#E9ECEE;border-radius:999px;overflow:hidden;margin:15px 0 12px;">'
+        + '<div style="position:absolute;top:0;left:0;height:100%;border-radius:999px;width:' + b.pct + '%;background:' + b.color + ';"></div>'
+        + '<div style="position:absolute;top:-2px;bottom:-2px;left:70%;border-left:2px dashed #3E8B68;"></div>'
+        + '</div>'
+        + '<div style="display:flex;align-items:flex-start;gap:9px;">'
+        + '<span style="flex-shrink:0;margin-top:2px;color:#828595;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>'
+        + '<div style="font-size:13px;font-weight:500;line-height:1.5;color:#585C71;"><span style="font-weight:700;color:#828595;margin-right:7px;">' + (t.res_next_step || 'Próximo passo') + '</span>' + info.action[lang] + '</div>'
+        + '</div>'
+        container.appendChild(card)
       })
+
+      /* CTA */
+      var ctaTitleTxt = {
+        pt: 'Maior prioridade: ' + BLOCKS[worst.id].name['pt'],
+        en: 'Top priority: '     + BLOCKS[worst.id].name['en'],
+        es: 'Mayor prioridad: '  + BLOCKS[worst.id].name['es']
+      }
+      var ctaSubTxt = {
+        pt: 'Menor prontidão (' + worst.pct + '%) e o bloco que destrava os outros quatro. Começa por: ' + BLOCKS[worst.id].action['pt'].toLowerCase() + '.',
+        en: 'Lowest readiness ('  + worst.pct + '%) and the area that unlocks the other four. Start by: ' + BLOCKS[worst.id].action['en'].toLowerCase() + '.',
+        es: 'Menor preparación (' + worst.pct + '%) y el bloque que desbloquea los otros cuatro. Empieza por: ' + BLOCKS[worst.id].action['es'].toLowerCase() + '.'
+      }
+      document.getElementById('res-cta-title').textContent = ctaTitleTxt[lang]
+      document.getElementById('res-cta-sub').textContent   = ctaSubTxt[lang]
+
+      var ctaBtnTxt = { pt: 'Quero ser contatado por um especialista', en: 'Contact me with a specialist', es: 'Quiero ser contactado por un especialista' }
+      var pdfBtnTxt = { pt: 'Baixar relatório (PDF)', en: 'Download report (PDF)', es: 'Descargar informe (PDF)' }
+      document.getElementById('res-btn-contact').innerHTML =
+        ctaBtnTxt[lang]
+        + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>'
+      document.getElementById('res-btn-pdf-text').textContent = pdfBtnTxt[lang]
 
       document.getElementById('quiz-bar').style.width = '100%'
       showView('view-result')
+    }
+
+    function buildRadar (blockData) {
+      var svg = document.getElementById('res-radar')
+      svg.innerHTML = ''
+      var ns = 'http://www.w3.org/2000/svg'
+      var cx = 260, cy = 150, R = 96, n = blockData.length
+
+      function ang (i) { return -Math.PI / 2 + i * 2 * Math.PI / n }
+      function P (i, v) {
+        var a = ang(i)
+        return [cx + R * (v / 100) * Math.cos(a), cy + R * (v / 100) * Math.sin(a)]
+      }
+      function poly (vals) {
+        return vals.map(function (v, i) {
+          return P(i, v).map(function (x) { return x.toFixed(1) }).join(',')
+        }).join(' ')
+      }
+      function svgEl (tag, attrs) {
+        var e = document.createElementNS(ns, tag)
+        Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]) })
+        return e
+      }
+
+      /* Grid rings */
+      ;[25, 50, 75, 100].forEach(function (g) {
+        svg.appendChild(svgEl('polygon', { points: poly(blockData.map(function () { return g })), fill: 'none', stroke: '#E3E6EA', 'stroke-width': '1' }))
+      })
+      /* Axis lines */
+      for (var i = 0; i < n; i++) {
+        var pt = P(i, 100)
+        svg.appendChild(svgEl('line', { x1: cx, y1: cy, x2: pt[0].toFixed(1), y2: pt[1].toFixed(1), stroke: '#E3E6EA', 'stroke-width': '1' }))
+      }
+      /* Target 70% */
+      svg.appendChild(svgEl('polygon', { points: poly(blockData.map(function () { return 70 })), fill: 'none', stroke: '#3E8B68', 'stroke-width': '1.5', 'stroke-dasharray': '5 4' }))
+      /* Score polygon (red, matching standalone) */
+      svg.appendChild(svgEl('polygon', { points: poly(blockData.map(function (b) { return Math.max(b.pct, 4) })), fill: 'rgba(192,69,59,.14)', stroke: '#C0453B', 'stroke-width': '2' }))
+      /* Score dots */
+      blockData.forEach(function (b, i) {
+        var pt = P(i, Math.max(b.pct, 4))
+        svg.appendChild(svgEl('circle', { cx: pt[0].toFixed(1), cy: pt[1].toFixed(1), r: '3.5', fill: '#C0453B', stroke: '#fff', 'stroke-width': '1.5' }))
+      })
+      /* Short-name labels at 122% of R */
+      blockData.forEach(function (b, i) {
+        var pt = P(i, 122)
+        var anchor = pt[0] > cx + 6 ? 'start' : pt[0] < cx - 6 ? 'end' : 'middle'
+        var txt = svgEl('text', { x: pt[0].toFixed(1), y: (pt[1] + 4).toFixed(1), 'text-anchor': anchor, 'font-size': '12.5', 'font-weight': '500', fill: '#585C71' })
+        txt.textContent = b.short
+        svg.appendChild(txt)
+      })
+    }
+
+    function genPdfResult () {
+      var J = window.jspdf && window.jspdf.jsPDF
+      if (!J) { alert('O gerador de PDF ainda está carregando. Tente novamente em instantes.'); return }
+      var totalMax   = 40
+      var totalScore = Object.keys(blockScore).reduce(function (s, k) { return s + blockScore[k] }, 0)
+      var totalPct   = Math.round((totalScore / totalMax) * 100)
+      var level      = riskLevel(totalPct)
+      var color      = riskColor(totalPct)
+      var bg         = riskBg(totalPct)
+      var SHORT = { A:'Fornecedores', B:'Contr. fornec.', C:'Contr. clientes', D:'Governança', E:'Prontidão' }
+      var blockIds = ['A', 'B', 'C', 'D', 'E']
+      var blockData = blockIds.map(function (k) {
+        var sc = blockScore[k], pct = Math.round((sc / BLOCKS[k].max) * 100)
+        return { id: k, sc: sc, pct: pct, pctStr: pct + '%', color: riskColor(pct), bg: riskBg(pct), level: riskLevel(pct), name: BLOCKS[k].name['pt'], action: BLOCKS[k].action['pt'], short: SHORT[k] }
+      })
+      var sorted = blockData.slice().sort(function (a, b) { return a.pct - b.pct }).map(function (b, i) { b.rank = i + 1; return b })
+      var worst  = sorted[0]
+      var overall = {
+        pctStr: totalPct + '%', label: level, color: color, bg: bg,
+        total: totalScore, max: totalMax,
+        read: totalScore + ' de ' + totalMax + ' pontos. A empresa está exposta em ' + sorted.filter(function(b){return b.pct<40}).length + ' das 5 áreas de impacto da Reforma.'
+      }
+      function hex (h) { h = h.replace('#',''); return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)] }
+      var doc   = new J({ unit:'pt', format:'a4' })
+      var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 44
+      var navy=[46,51,78], ink2=[88,92,113], muted=[130,133,149], track=[233,236,238], green=[62,139,104]
+      /* Header */
+      doc.setFillColor(navy[0],navy[1],navy[2]); doc.rect(0,0,W,176,'F')
+      doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(150,160,182)
+      doc.text('DIAGNÓSTICO DE PRONTIDÃO  ·  REFORMA TRIBUTÁRIA', M, 50)
+      doc.setTextColor(255,255,255); doc.setFontSize(62); doc.text(overall.pctStr, M, 122)
+      var tc=hex(overall.color), bc=hex(overall.bg)
+      doc.setFontSize(10.5)
+      var plabel=overall.label, pw=doc.getTextWidth(plabel)+34, px=M+doc.getTextWidth(overall.pctStr)+22, py=94
+      doc.setFillColor(bc[0],bc[1],bc[2]); doc.roundedRect(px,py,pw,26,13,13,'F')
+      doc.setFillColor(tc[0],tc[1],tc[2]); doc.circle(px+15,py+13,4,'F')
+      doc.setTextColor(tc[0],tc[1],tc[2]); doc.setFont('helvetica','bold'); doc.text(plabel,px+26,py+17)
+      doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(206,212,224)
+      doc.text(doc.splitTextToSize(overall.read, W-M-px), px, py+52)
+      /* Areas */
+      var y=224
+      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(navy[0],navy[1],navy[2])
+      doc.text('Resultado por área de impacto', M, y)
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(muted[0],muted[1],muted[2])
+      doc.text('Ordenado por prioridade · linha tracejada = meta de 70% (baixo risco)', M, y+16)
+      y += 44
+      var barW = W - 2*M
+      sorted.forEach(function (b) {
+        var col = hex(b.color)
+        doc.setFont('helvetica','bold'); doc.setFontSize(11.5); doc.setTextColor(navy[0],navy[1],navy[2])
+        doc.text(b.rank + '.  ' + b.name, M, y)
+        doc.setFontSize(15); doc.setTextColor(col[0],col[1],col[2])
+        doc.text(b.pctStr, W-M, y, {align:'right'})
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.text(b.level, W-M, y+13, {align:'right'})
+        var by=y+22
+        doc.setFillColor(track[0],track[1],track[2]); doc.roundedRect(M,by,barW,7,3.5,3.5,'F')
+        var fw=Math.max(barW*(b.pct/100),4)
+        doc.setFillColor(col[0],col[1],col[2]); doc.roundedRect(M,by,fw,7,3.5,3.5,'F')
+        doc.setDrawColor(green[0],green[1],green[2]); doc.setLineWidth(1); doc.setLineDashPattern([2,2],0)
+        doc.line(M+barW*0.7,by-3,M+barW*0.7,by+10); doc.setLineDashPattern([],0)
+        doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(ink2[0],ink2[1],ink2[2])
+        var ns=doc.splitTextToSize('Próximo passo:  '+b.action, barW)
+        doc.text(ns, M, by+24); y = by+24+ns.length*12+18
+      })
+      /* Priority callout */
+      y += 2
+      doc.setFillColor(247,231,226); doc.roundedRect(M,y,barW,76,12,12,'F')
+      doc.setFillColor(192,69,59); doc.roundedRect(M,y,5,76,2,2,'F')
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(192,69,59)
+      doc.text('MAIOR PRIORIDADE', M+22, y+24)
+      doc.setFontSize(13); doc.setTextColor(navy[0],navy[1],navy[2]); doc.text(worst.name, M+22, y+44)
+      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(ink2[0],ink2[1],ink2[2])
+      doc.text(doc.splitTextToSize(worst.action, barW-44), M+22, y+60)
+      /* Footer */
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(muted[0],muted[1],muted[2])
+      doc.text('Páreo Consultoria · by CLA Brasil   |   Pontuação: Sim=2 · Em andamento=1 · Não=0   |   Gerado em ' + new Date().toLocaleDateString('pt-BR'), W/2, H-30, {align:'center'})
+      doc.save('relatorio-prontidao-reforma-tributaria.pdf')
     }
 
 
@@ -1175,5 +1473,7 @@
   })();
   </script>
   <script>lucide.createIcons()</script>
+  <script src="mockResultados.js"></script>
+  <script>if (window.initDevBypass) initDevBypass();</script>
 </body>
 </html>
