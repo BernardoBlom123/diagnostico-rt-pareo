@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Diagnóstico de Prontidão - Reforma Tributária</title>
-  <link rel="icon" href="data:,">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>">
+  <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script>
@@ -78,6 +79,18 @@
     .hs-btn-scoring.ativo:hover{transform:translateY(-2px);}
     @keyframes scoring-glow{0%,100%{box-shadow:0 4px 18px rgba(0,217,189,0.35);}50%{box-shadow:0 6px 36px rgba(0,217,189,0.7);}}
     @media(max-width:480px){.hs-row{grid-template-columns:1fr;}}
+
+    /* ── Seletor de país (telefone) ── */
+    .tel-wrap{display:flex;border:1px solid #d8d8d2;border-radius:8px;overflow:visible;background:#fff;position:relative;}
+    .tel-wrap:focus-within{border-color:#00D9BD;}
+    #tel-country-btn{display:flex;align-items:center;gap:5px;padding:0 10px;background:transparent;border:none;border-right:1px solid #d8d8d2;cursor:pointer;font-size:13px;font-weight:600;color:#3D425D;font-family:inherit;white-space:nowrap;flex-shrink:0;}
+    #tel-country-btn:hover{background:#F3F4F6;}
+    #tel-country-drawer{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.13);z-index:200;min-width:200px;overflow:hidden;max-height:260px;overflow-y:auto;}
+    .tel-country-opt{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;font-size:13px;color:#3D425D;border:none;background:transparent;width:100%;font-family:inherit;text-align:left;}
+    .tel-country-opt:hover{background:#F3F4F6;}
+    .tel-country-opt.active{background:#EFF9F8;color:#008B7A;font-weight:600;}
+    .tel-country-opt .opt-code{color:#9CA3AF;font-size:12px;margin-left:auto;}
+    #f_tel{border:none;flex:1;min-width:0;padding:0 12px;font-size:14px;font-family:inherit;background:transparent;outline:none;height:40px;}
 
     /* ── Formulário sem scroll em notebooks ── */
     @media(max-height:820px){
@@ -330,7 +343,15 @@
               <div class="hs-row">
                 <div class="hs-field">
                   <label id="form-label-tel" for="f_tel">Telefone *</label>
-                  <input id="f_tel" type="tel" autocomplete="tel" placeholder="(11) 99999-9999" inputmode="numeric" />
+                  <div class="tel-wrap">
+                    <button type="button" id="tel-country-btn" onclick="toggleCountryDrawer()">
+                      <span id="tel-flag">🇧🇷</span>
+                      <span id="tel-dialcode">+55</span>
+                      <svg width="9" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true" id="tel-chevron" style="transition:transform .2s;"><path d="M1 1L5 5L9 1" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div id="tel-country-drawer"></div>
+                    <input id="f_tel" type="tel" autocomplete="tel" placeholder="(11) 99999-9999" inputmode="numeric" />
+                  </div>
                 </div>
                 <div class="hs-field">
                   <label id="form-label-email" for="f_email">Email corporativo *</label>
@@ -1425,7 +1446,7 @@
     document.getElementById("btnEnviar").addEventListener("click", async function () {
       var dados = {
         nome:     document.getElementById("f_nome").value.trim(),
-        tel:      document.getElementById("f_tel").value.trim(),
+        tel:      selectedCountry.code + ' ' + document.getElementById("f_tel").value.trim(),
         email:    document.getElementById("f_email").value.trim(),
         cargo:    document.getElementById("f_cargo").value.trim(),
         empresa:  document.getElementById("f_empresa").value.trim(),
@@ -1494,23 +1515,87 @@
   })();
   </script>
   <script>
+    /* ── Seletor de país ── */
+    var COUNTRIES = [
+      { flag:'🇧🇷', name:'Brasil',    code:'+55',  mask:'(##) #####-####', mask10:'(##) ####-####' },
+      { flag:'🇺🇸', name:'EUA',       code:'+1',   mask:'(###) ###-####' },
+      { flag:'🇵🇹', name:'Portugal',  code:'+351', mask:'### ### ###' },
+      { flag:'🇦🇷', name:'Argentina', code:'+54',  mask:'(###) ###-####' },
+      { flag:'🇲🇽', name:'México',    code:'+52',  mask:'## #### ####' },
+      { flag:'🇨🇴', name:'Colômbia',  code:'+57',  mask:'### ### ####' },
+      { flag:'🇨🇱', name:'Chile',     code:'+56',  mask:'# #### ####' },
+      { flag:'🇵🇾', name:'Paraguai',  code:'+595', mask:'### ######' },
+      { flag:'🇺🇾', name:'Uruguai',   code:'+598', mask:'#### ####' },
+      { flag:'🇪🇸', name:'Espanha',   code:'+34',  mask:'### ### ###' },
+    ]
+    var selectedCountry = COUNTRIES[0]
+
+    function applyMask(raw, country) {
+      var digits = raw.replace(/\D/g,'')
+      var mask = country.mask
+      if (country.mask10 && digits.length <= 10) mask = country.mask10
+      var out = '', di = 0
+      for (var i = 0; i < mask.length && di < digits.length; i++) {
+        if (mask[i] === '#') { out += digits[di++] } else { out += mask[i] }
+      }
+      return out
+    }
+
+    function buildCountryDrawer() {
+      var drawer = document.getElementById('tel-country-drawer')
+      drawer.innerHTML = COUNTRIES.map(function(c, i) {
+        return '<button type="button" class="tel-country-opt' + (c === selectedCountry ? ' active' : '') + '" onclick="selectCountry(' + i + ')">'
+          + '<span>' + c.flag + '</span>'
+          + '<span>' + c.name + '</span>'
+          + '<span class="opt-code">' + c.code + '</span>'
+          + '</button>'
+      }).join('')
+    }
+
+    function selectCountry(i) {
+      selectedCountry = COUNTRIES[i]
+      document.getElementById('tel-flag').textContent    = selectedCountry.flag
+      document.getElementById('tel-dialcode').textContent = selectedCountry.code
+      var inp = document.getElementById('f_tel')
+      var digits = inp.value.replace(/\D/g,'')
+      inp.value = applyMask(digits, selectedCountry)
+      var masks = { '🇧🇷':'(11) 99999-9999', '🇺🇸':'(555) 555-5555', '🇵🇹':'912 345 678' }
+      inp.placeholder = masks[selectedCountry.flag] || selectedCountry.mask.replace(/#/g,'9')
+      closeCountryDrawer()
+      buildCountryDrawer()
+    }
+
+    function toggleCountryDrawer() {
+      var d = document.getElementById('tel-country-drawer')
+      var open = d.style.display === 'block'
+      if (!open) { buildCountryDrawer(); d.style.display = 'block'; document.getElementById('tel-chevron').style.transform = 'rotate(180deg)' }
+      else { closeCountryDrawer() }
+    }
+
+    function closeCountryDrawer() {
+      document.getElementById('tel-country-drawer').style.display = 'none'
+      document.getElementById('tel-chevron').style.transform = ''
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('tel-country-btn').contains(e.target) &&
+          !document.getElementById('tel-country-drawer').contains(e.target)) {
+        closeCountryDrawer()
+      }
+    })
+
     var PERSONAL_DOMAINS = ['gmail','yahoo','hotmail','outlook','icloud','live','bol','uol','terra','ig','msn','aol','protonmail','tutanota','yandex','mail','zoho','gmx']
     function isPersonalEmail(e) {
       var domain = (e.split('@')[1] || '').split('.')[0].toLowerCase()
       return PERSONAL_DOMAINS.indexOf(domain) !== -1
     }
 
-    function mascaraTel(v) {
-      v = v.replace(/\D/g, '').slice(0, 11)
-      if (v.length <= 10) return v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '')
-      return v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '')
-    }
     document.getElementById('f_tel').addEventListener('input', function () {
-      var pos = this.selectionStart
       var prev = this.value.length
-      this.value = mascaraTel(this.value)
+      this.value = applyMask(this.value, selectedCountry)
       var diff = this.value.length - prev
-      this.setSelectionRange(pos + diff, pos + diff)
+      var pos = this.selectionStart + diff
+      this.setSelectionRange(pos, pos)
     })
   </script>
   <script>lucide.createIcons()</script>
