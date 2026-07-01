@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Diagnóstico de Prontidão - Reforma Tributária</title>
+  <link rel="icon" href="data:,">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script>
@@ -329,7 +330,7 @@
               <div class="hs-row">
                 <div class="hs-field">
                   <label id="form-label-tel" for="f_tel">Telefone *</label>
-                  <input id="f_tel" type="tel" autocomplete="tel" placeholder="+55 12 99999-9999" />
+                  <input id="f_tel" type="tel" autocomplete="tel" placeholder="(11) 99999-9999" inputmode="numeric" />
                 </div>
                 <div class="hs-field">
                   <label id="form-label-email" for="f_email">Email corporativo *</label>
@@ -371,6 +372,7 @@
                   <option value="Alimentação e Bebidas">Alimentação e Bebidas</option>
                   <option value="Agronegócio">Agronegócio</option>
                   <option value="Logística e Transporte">Logística e Transporte</option>
+                  <option value="Outro">Outro</option>
                 </select>
               </div>
               <div class="hs-field">
@@ -549,7 +551,7 @@
         form_label_regime: 'Regime fiscal *',
         form_ph_tel: '+55 12 99999-9999',
         form_sel_default: 'Selecione...',
-        form_segmento_opts: ['Tecnologia e Software','Saúde','Educação','Comércio (varejo/atacado)','Serviços Financeiros','Manufatura','Construção e Imobiliário','Alimentação e Bebidas','Agronegócio','Logística e Transporte'],
+        form_segmento_opts: ['Tecnologia e Software','Saúde','Educação','Comércio (varejo/atacado)','Serviços Financeiros','Manufatura','Construção e Imobiliário','Alimentação e Bebidas','Agronegócio','Logística e Transporte','Outro'],
         form_regime_opts: ['Lucro Presumido','Lucro Real','Simples Nacional','Outros'],
         form_btn_enviar: 'Enviar',
         form_next: 'Próximo',
@@ -557,6 +559,7 @@
         form_scoring_hint: 'Sua Análise de impacto será liberada após o envio dos dados.',
         val_required: 'Preencha todos os campos obrigatórios.',
         val_email: 'Email inválido.',
+        val_email_corp: 'Use um email corporativo (ex: voce@suaempresa.com.br).',
         val_terms: 'Aceite os termos de uso para continuar.',
         val_sent: '✓ Enviado',
         val_sending: 'Enviando...',
@@ -597,7 +600,7 @@
         form_label_regime: 'Tax regime *',
         form_ph_tel: '+55 12 99999-9999',
         form_sel_default: 'Select...',
-        form_segmento_opts: ['Technology & Software','Healthcare','Education','Retail & Wholesale','Financial Services','Manufacturing','Construction & Real Estate','Food & Beverage','Agribusiness','Logistics & Transportation'],
+        form_segmento_opts: ['Technology & Software','Healthcare','Education','Retail & Wholesale','Financial Services','Manufacturing','Construction & Real Estate','Food & Beverage','Agribusiness','Logistics & Transportation','Other'],
         form_regime_opts: ['Presumed Profit','Real Profit','Simples Nacional','Other'],
         form_btn_enviar: 'Submit',
         form_next: 'Next',
@@ -605,6 +608,7 @@
         form_scoring_hint: 'Your Impact Analysis will be released after data submission.',
         val_required: 'Please fill in all required fields.',
         val_email: 'Invalid email.',
+        val_email_corp: 'Please use a corporate email (e.g. you@yourcompany.com).',
         val_terms: 'Please accept the terms of use to continue.',
         val_sent: '✓ Sent',
         val_sending: 'Submitting...',
@@ -645,7 +649,7 @@
         form_label_regime: 'Régimen fiscal *',
         form_ph_tel: '+55 12 99999-9999',
         form_sel_default: 'Seleccione...',
-        form_segmento_opts: ['Tecnología y Software','Salud','Educación','Comercio (minorista/mayorista)','Servicios Financieros','Manufactura','Construcción e Inmobiliario','Alimentación y Bebidas','Agronegocios','Logística y Transporte'],
+        form_segmento_opts: ['Tecnología y Software','Salud','Educación','Comercio (minorista/mayorista)','Servicios Financieros','Manufactura','Construcción e Inmobiliario','Alimentación y Bebidas','Agronegocios','Logística y Transporte','Otro'],
         form_regime_opts: ['Lucro Presumido','Lucro Real','Simples Nacional','Otros'],
         form_btn_enviar: 'Enviar',
         form_next: 'Siguiente',
@@ -653,6 +657,7 @@
         form_scoring_hint: 'Su Análisis de impacto será publicado tras el envío de datos.',
         val_required: 'Complete todos los campos obligatorios.',
         val_email: 'Email inválido.',
+        val_email_corp: 'Use un email corporativo (ej: usted@suempresa.com).',
         val_terms: 'Acepte los términos de uso para continuar.',
         val_sent: '✓ Enviado',
         val_sending: 'Enviando...',
@@ -861,6 +866,9 @@
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         status.textContent = t.val_email; status.style.color = '#A32D2D'; return
+      }
+      if (isPersonalEmail(email)) {
+        status.textContent = t.val_email_corp; status.style.color = '#A32D2D'; return
       }
       status.textContent = ''
       document.getElementById('form-step1').style.display    = 'none'
@@ -1432,6 +1440,9 @@
       if (!validarEmail(dados.email)) {
         setStatus(T[lang].val_email, "#A32D2D"); return;
       }
+      if (isPersonalEmail(dados.email)) {
+        setStatus(T[lang].val_email_corp, "#A32D2D"); return;
+      }
       if (!document.getElementById("f_termos").checked) {
         var tf = document.querySelector(".hs-terms-field");
         tf.classList.remove("error");
@@ -1481,6 +1492,26 @@
       }
     });
   })();
+  </script>
+  <script>
+    var PERSONAL_DOMAINS = ['gmail','yahoo','hotmail','outlook','icloud','live','bol','uol','terra','ig','msn','aol','protonmail','tutanota','yandex','mail','zoho','gmx']
+    function isPersonalEmail(e) {
+      var domain = (e.split('@')[1] || '').split('.')[0].toLowerCase()
+      return PERSONAL_DOMAINS.indexOf(domain) !== -1
+    }
+
+    function mascaraTel(v) {
+      v = v.replace(/\D/g, '').slice(0, 11)
+      if (v.length <= 10) return v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '')
+      return v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '')
+    }
+    document.getElementById('f_tel').addEventListener('input', function () {
+      var pos = this.selectionStart
+      var prev = this.value.length
+      this.value = mascaraTel(this.value)
+      var diff = this.value.length - prev
+      this.setSelectionRange(pos + diff, pos + diff)
+    })
   </script>
   <script>lucide.createIcons()</script>
   <script src="mockResultados.js"></script>
