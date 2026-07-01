@@ -476,21 +476,20 @@
         <div id="res-blocks" style="display:flex;flex-direction:column;gap:10px;margin-top:14px;"></div>
 
         <!-- CTA -->
-        <section style="margin-top:18px;background:#2E334E;background-image:radial-gradient(120% 160% at 100% 0%, rgba(192,69,59,.16), transparent 60%);border-radius:18px;padding:26px 28px;">
+        <section style="margin-top:18px;background:#fff;border:1px solid #E5E7EB;border-radius:18px;padding:26px 28px;">
           <div style="display:flex;gap:16px;align-items:flex-start;">
-            <span style="flex-shrink:0;width:46px;height:46px;border-radius:13px;background:rgba(192,69,59,.2);border:1px solid rgba(192,69,59,.35);display:grid;place-items:center;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F0A79D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.5 14.72A2 2 0 0 0 3.5 21.5h17a2 2 0 0 0 1.71-2.92l-8.5-14.72a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+            <span style="flex-shrink:0;width:46px;height:46px;border-radius:13px;background:rgba(192,69,59,.1);border:1px solid rgba(192,69,59,.25);display:grid;place-items:center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0453B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.5 14.72A2 2 0 0 0 3.5 21.5h17a2 2 0 0 0 1.71-2.92l-8.5-14.72a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
             </span>
             <div style="flex:1;min-width:0;">
-              <h3 id="res-cta-title" style="font-size:16.5px;font-weight:700;margin:0 0 4px;color:#fff;letter-spacing:-.01em;"></h3>
-              <p id="res-cta-sub" style="font-size:13.5px;font-weight:500;color:rgba(255,255,255,.74);margin:0;line-height:1.55;"></p>
+              <h3 id="res-cta-title" style="font-size:16.5px;font-weight:700;margin:0 0 4px;color:#2E334E;letter-spacing:-.01em;"></h3>
+              <p id="res-cta-sub" style="font-size:13.5px;font-weight:500;color:#585C71;margin:0;line-height:1.55;"></p>
             </div>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:11px;margin-top:22px;">
-            <button id="res-btn-contact" onclick="showView('view-form')"
-              style="background:#24787A;color:#fff;border:none;font-family:inherit;font-size:14.5px;font-weight:700;padding:14px 24px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;box-shadow:0 8px 20px -8px rgba(0,0,0,.55);transition:filter .15s,transform .1s;"></button>
+            <button id="res-btn-contact" style="display:none;"></button>
             <button id="res-btn-pdf" onclick="genPdfResult()"
-              style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.32);font-family:inherit;font-size:14px;font-weight:600;padding:13px 20px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:background .15s,border-color .15s;">
+              style="background:#2E334E;color:#fff;border:none;font-family:inherit;font-size:14px;font-weight:600;padding:13px 22px;border-radius:11px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:background .15s,transform .1s;box-shadow:0 4px 16px rgba(46,51,78,.22);">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
               <span id="res-btn-pdf-text">Baixar relatório (PDF)</span>
             </button>
@@ -1154,57 +1153,82 @@
       function hex (h) { h = h.replace('#',''); return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)] }
       var doc   = new J({ unit:'pt', format:'a4' })
       var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), M = 44
-      var navy=[46,51,78], ink2=[88,92,113], muted=[130,133,149], track=[233,236,238], green=[62,139,104]
-      /* Header */
-      doc.setFillColor(navy[0],navy[1],navy[2]); doc.rect(0,0,W,176,'F')
-      doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(150,160,182)
-      doc.text('DIAGNÓSTICO DE PRONTIDÃO  ·  REFORMA TRIBUTÁRIA', M, 50)
-      doc.setTextColor(255,255,255); doc.setFontSize(62); doc.text(overall.pctStr, M, 122)
+      var navy=[46,51,78], ink2=[88,92,113], muted=[130,133,149], track=[220,223,226], green=[62,139,104]
+      var barW = W - 2*M
+
+      /* ── Header ── */
+      doc.setFillColor(navy[0],navy[1],navy[2]); doc.rect(0,0,W,160,'F')
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(150,160,182)
+      doc.text('DIAGNÓSTICO DE PRONTIDÃO  ·  REFORMA TRIBUTÁRIA', M, 44)
+
+      /* Score grande */
+      doc.setTextColor(255,255,255); doc.setFontSize(56); doc.setFont('helvetica','bold')
+      doc.text(overall.pctStr, M, 108)
+      var scoreW = doc.getTextWidth(overall.pctStr)
+
+      /* Pill de risco ao lado do score */
       var tc=hex(overall.color), bc=hex(overall.bg)
-      doc.setFontSize(10.5)
-      var plabel=overall.label, pw=doc.getTextWidth(plabel)+34, px=M+doc.getTextWidth(overall.pctStr)+22, py=94
-      doc.setFillColor(bc[0],bc[1],bc[2]); doc.roundedRect(px,py,pw,26,13,13,'F')
-      doc.setFillColor(tc[0],tc[1],tc[2]); doc.circle(px+15,py+13,4,'F')
-      doc.setTextColor(tc[0],tc[1],tc[2]); doc.setFont('helvetica','bold'); doc.text(plabel,px+26,py+17)
-      doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(206,212,224)
-      doc.text(doc.splitTextToSize(overall.read, W-M-px), px, py+52)
-      /* Areas */
-      var y=224
+      doc.setFontSize(10); doc.setFont('helvetica','bold')
+      var plabel=overall.label, pw=doc.getTextWidth(plabel)+32
+      var px=M+scoreW+18, py=84
+      doc.setFillColor(bc[0],bc[1],bc[2]); doc.roundedRect(px,py,pw,24,12,12,'F')
+      doc.setFillColor(tc[0],tc[1],tc[2]); doc.circle(px+13,py+12,3.5,'F')
+      doc.setTextColor(tc[0],tc[1],tc[2]); doc.text(plabel,px+23,py+16)
+
+      /* Texto descritivo abaixo do score, alinhado à margem esquerda */
+      doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(200,208,220)
+      var readLines = doc.splitTextToSize(overall.read, barW)
+      doc.text(readLines, M, 126)
+
+      /* ── Seção de áreas ── */
+      var y = 196
       doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(navy[0],navy[1],navy[2])
       doc.text('Resultado por área de impacto', M, y)
-      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(muted[0],muted[1],muted[2])
-      doc.text('Ordenado por prioridade · linha tracejada = meta de 70% (baixo risco)', M, y+16)
-      y += 44
-      var barW = W - 2*M
+      doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(muted[0],muted[1],muted[2])
+      doc.text('Ordenado por prioridade  ·  linha tracejada = meta 70% (baixo risco)', M, y+15)
+      y += 38
+
       sorted.forEach(function (b) {
         var col = hex(b.color)
-        doc.setFont('helvetica','bold'); doc.setFontSize(11.5); doc.setTextColor(navy[0],navy[1],navy[2])
+        /* Nome e score na mesma linha */
+        doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(navy[0],navy[1],navy[2])
         doc.text(b.rank + '.  ' + b.name, M, y)
-        doc.setFontSize(15); doc.setTextColor(col[0],col[1],col[2])
+        doc.setFontSize(13); doc.setTextColor(col[0],col[1],col[2])
         doc.text(b.pctStr, W-M, y, {align:'right'})
-        doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.text(b.level, W-M, y+13, {align:'right'})
-        var by=y+22
-        doc.setFillColor(track[0],track[1],track[2]); doc.roundedRect(M,by,barW,7,3.5,3.5,'F')
+        doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(muted[0],muted[1],muted[2])
+        doc.text(b.level, W-M, y+12, {align:'right'})
+        /* Barra de progresso */
+        var by=y+20
+        doc.setFillColor(track[0],track[1],track[2]); doc.roundedRect(M,by,barW,6,3,3,'F')
         var fw=Math.max(barW*(b.pct/100),4)
-        doc.setFillColor(col[0],col[1],col[2]); doc.roundedRect(M,by,fw,7,3.5,3.5,'F')
-        doc.setDrawColor(green[0],green[1],green[2]); doc.setLineWidth(1); doc.setLineDashPattern([2,2],0)
-        doc.line(M+barW*0.7,by-3,M+barW*0.7,by+10); doc.setLineDashPattern([],0)
-        doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(ink2[0],ink2[1],ink2[2])
-        var ns=doc.splitTextToSize('Próximo passo:  '+b.action, barW)
-        doc.text(ns, M, by+24); y = by+24+ns.length*12+18
+        doc.setFillColor(col[0],col[1],col[2]); doc.roundedRect(M,by,fw,6,3,3,'F')
+        /* Linha de meta 70% */
+        doc.setDrawColor(green[0],green[1],green[2]); doc.setLineWidth(0.8); doc.setLineDashPattern([2,2],0)
+        doc.line(M+barW*0.7,by-2,M+barW*0.7,by+8); doc.setLineDashPattern([],0)
+        /* Próximo passo */
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(ink2[0],ink2[1],ink2[2])
+        var ns=doc.splitTextToSize('Próximo passo: '+b.action, barW)
+        doc.text(ns, M, by+20)
+        y = by+20+ns.length*11+16
       })
-      /* Priority callout */
-      y += 2
-      doc.setFillColor(247,231,226); doc.roundedRect(M,y,barW,76,12,12,'F')
-      doc.setFillColor(192,69,59); doc.roundedRect(M,y,5,76,2,2,'F')
-      doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(192,69,59)
-      doc.text('MAIOR PRIORIDADE', M+22, y+24)
-      doc.setFontSize(13); doc.setTextColor(navy[0],navy[1],navy[2]); doc.text(worst.name, M+22, y+44)
-      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(ink2[0],ink2[1],ink2[2])
-      doc.text(doc.splitTextToSize(worst.action, barW-44), M+22, y+60)
-      /* Footer */
-      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(muted[0],muted[1],muted[2])
-      doc.text('Páreo Consultoria · by CLA Brasil   |   Pontuação: Sim=2 · Em andamento=1 · Não=0   |   Gerado em ' + new Date().toLocaleDateString('pt-BR'), W/2, H-30, {align:'center'})
+
+      /* ── Callout de maior prioridade ── */
+      y += 6
+      var actionLines = doc.splitTextToSize(worst.action, barW-32)
+      var calloutH = 20+16+14+actionLines.length*12+22
+      doc.setFillColor(253,242,240); doc.roundedRect(M,y,barW,calloutH,10,10,'F')
+      doc.setFillColor(192,69,59); doc.roundedRect(M,y,4,calloutH,2,2,'F')
+      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(192,69,59)
+      doc.text('MAIOR PRIORIDADE', M+18, y+18)
+      doc.setFontSize(12); doc.setTextColor(navy[0],navy[1],navy[2])
+      doc.text(worst.name, M+18, y+34)
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(ink2[0],ink2[1],ink2[2])
+      doc.text(actionLines, M+18, y+50)
+      y += calloutH
+
+      /* ── Rodapé ── */
+      doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(muted[0],muted[1],muted[2])
+      doc.text('Páreo Consultoria · by CLA Brasil   |   Sim=2 pts · Em andamento=1 pt · Não=0   |   ' + new Date().toLocaleDateString('pt-BR'), W/2, H-26, {align:'center'})
       doc.save('relatorio-prontidao-reforma-tributaria.pdf')
     }
 
